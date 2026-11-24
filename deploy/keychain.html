@@ -1838,8 +1838,18 @@
 
       const centerX = 0.5 * (baseMinX + baseMaxX);
       const centerY = 0.5 * (baseMinY + baseMaxY);
+      const rawDimX = baseMaxX - baseMinX;
+      const rawDimY = baseMaxY - baseMinY;
+      const MAX_DIM_X = 80; // 8 cm (80 mm)
+      const MAX_DIM_Y = 50; // 5 cm (50 mm)
+      const fitScale = (rawDimX > MAX_DIM_X || rawDimY > MAX_DIM_Y)
+        ? Math.min(MAX_DIM_X / rawDimX, MAX_DIM_Y / rawDimY)
+        : 1;
 
-      const shiftPoint = (p) => ({ x: p.x - centerX, y: p.y - centerY });
+      const shiftPoint = (p) => ({
+        x: (p.x - centerX) * fitScale,
+        y: (p.y - centerY) * fitScale
+      });
 
       const centeredBaseRecords = baseShapeRecords.map(rec => ({
         outer: rec.outer.map(shiftPoint),
@@ -1883,8 +1893,8 @@
       updateThreeMeshes(baseGeo, textGeo);
 
       // Update Stats & HUD
-      const dimX = baseMaxX - baseMinX;
-      const dimY = baseMaxY - baseMinY;
+      const dimX = rawDimX * fitScale;
+      const dimY = rawDimY * fitScale;
       const dimZ = state.baseHeight + state.textHeight;
       const baseTris = baseGeo.index ? baseGeo.index.count / 3 : baseGeo.attributes.position.count / 3;
       const textTris = textGeo.index ? textGeo.index.count / 3 : textGeo.attributes.position.count / 3;
@@ -1906,14 +1916,17 @@
 
       // Render 2D Contour Expansion PIP Window
       render2DPipPreview(centeredBaseRecords, centeredTextRecords, hasHole ? {
-        cx: holeCx - centerX,
-        cy: holeCy - centerY,
-        rIn,
-        rOut
+        cx: (holeCx - centerX) * fitScale,
+        cy: (holeCy - centerY) * fitScale,
+        rIn: rIn * fitScale,
+        rOut: rOut * fitScale
       } : null, dimX, dimY);
 
       const elapsed = Math.round(performance.now() - t0);
-      setStatus(`EDT + Marching Squares 完成 (${elapsed} ms · ${gridW}×${gridH} px)`, false);
+      const scaleNote = fitScale < 1
+        ? ` · 已自動等比縮放至 ${(dimX / 10).toFixed(1)}×${(dimY / 10).toFixed(1)} cm（上限 8×5 cm）`
+        : '';
+      setStatus(`EDT + Marching Squares 完成 (${elapsed} ms · ${gridW}×${gridH} px)${scaleNote}`, false);
     }
 
     function updateThreeMeshes(baseGeo, textGeo) {
