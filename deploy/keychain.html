@@ -289,24 +289,6 @@
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <div class="flex justify-between text-[11px] mb-1">
-                  <span class="text-zinc-400">內孔直徑</span>
-                  <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valHoleInnerDia">4.5</span> mm</span>
-                </div>
-                <input id="rngHoleInnerDia" type="range" min="2.0" max="10.0" step="0.5" value="4.5" class="w-full" />
-              </div>
-
-              <div>
-                <div class="flex justify-between text-[11px] mb-1">
-                  <span class="text-zinc-400">外環壁厚</span>
-                  <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valHoleWall">3.0</span> mm</span>
-                </div>
-                <input id="rngHoleWall" type="range" min="1.5" max="6.0" step="0.2" value="3.0" class="w-full" />
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <div class="flex justify-between text-[11px] mb-1">
                   <span class="text-zinc-400">掛孔水平微調 (X)</span>
                   <span class="font-mono-tech text-zinc-300"><span id="valHoleOffsetX">0.0</span> mm</span>
                 </div>
@@ -324,90 +306,39 @@
           </div>
         </section>
 
-        <!-- SECTION 4: 雙色耗材配色預覽（僅提供 黑、黃、橘、白、紅） -->
+        <!-- SECTION 4: 雙色耗材配色選擇（僅提供 黑底+橘、黑底+黃、黑底+白） -->
         <section class="bg-[#18181c] border border-zinc-800/90 rounded-xl p-3.5 space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <i data-lucide="palette" class="w-4 h-4 text-[#f97316]"></i>
               <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-200">4. 雙色耗材配色選擇</h2>
             </div>
-            <button onclick="swapColors()" class="text-[11px] text-zinc-400 hover:text-[#f97316] flex items-center gap-1 transition">
-              <i data-lucide="arrow-left-right" class="w-3 h-3"></i> 對調底/字顏色
-            </button>
           </div>
 
-          <!-- Quick Presets (Only Black, Yellow, Orange, White, Red) -->
-          <div class="grid grid-cols-5 gap-1.5">
-            <button type="button" onclick="applyColorPreset('#18181b', '#f97316')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底亮橘">
-              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
+          <div class="grid grid-cols-3 gap-2" id="colorPresetGroup">
+            <button type="button" data-text-color="#f97316" onclick="applyColorPreset('#18181b', '#f97316')" class="flex flex-col items-center p-2 rounded-lg bg-orange-500/15 hover:bg-zinc-800 border-2 border-orange-500 transition" title="黑底 + 橘">
+              <div class="flex w-9 h-5 rounded overflow-hidden border border-zinc-700">
                 <span class="w-1/2 h-full bg-[#18181b]"></span>
                 <span class="w-1/2 h-full bg-[#f97316]"></span>
               </div>
-              <span class="text-[10px] text-zinc-300 mt-1">黑底亮橘</span>
+              <span class="text-xs font-semibold text-white mt-1.5">黑底 + 橘</span>
             </button>
 
-            <button type="button" onclick="applyColorPreset('#18181b', '#facc15')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底亮黃">
-              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
+            <button type="button" data-text-color="#facc15" onclick="applyColorPreset('#18181b', '#facc15')" class="flex flex-col items-center p-2 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底 + 黃">
+              <div class="flex w-9 h-5 rounded overflow-hidden border border-zinc-700">
                 <span class="w-1/2 h-full bg-[#18181b]"></span>
                 <span class="w-1/2 h-full bg-[#facc15]"></span>
               </div>
-              <span class="text-[10px] text-zinc-300 mt-1">黑底亮黃</span>
+              <span class="text-xs font-semibold text-zinc-300 mt-1.5">黑底 + 黃</span>
             </button>
 
-            <button type="button" onclick="applyColorPreset('#18181b', '#ffffff')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底純白">
-              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
+            <button type="button" data-text-color="#ffffff" onclick="applyColorPreset('#18181b', '#ffffff')" class="flex flex-col items-center p-2 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底 + 白">
+              <div class="flex w-9 h-5 rounded overflow-hidden border border-zinc-700">
                 <span class="w-1/2 h-full bg-[#18181b]"></span>
                 <span class="w-1/2 h-full bg-[#ffffff]"></span>
               </div>
-              <span class="text-[10px] text-zinc-300 mt-1">黑底純白</span>
+              <span class="text-xs font-semibold text-zinc-300 mt-1.5">黑底 + 白</span>
             </button>
-
-            <button type="button" onclick="applyColorPreset('#dc2626', '#ffffff')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="紅底純白">
-              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
-                <span class="w-1/2 h-full bg-[#dc2626]"></span>
-                <span class="w-1/2 h-full bg-[#ffffff]"></span>
-              </div>
-              <span class="text-[10px] text-zinc-300 mt-1">紅底純白</span>
-            </button>
-
-            <button type="button" onclick="applyColorPreset('#ffffff', '#18181b')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="白底純黑">
-              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
-                <span class="w-1/2 h-full bg-[#ffffff]"></span>
-                <span class="w-1/2 h-full bg-[#18181b]"></span>
-              </div>
-              <span class="text-[10px] text-zinc-300 mt-1">白底純黑</span>
-            </button>
-          </div>
-
-          <!-- Individual Base / Text Swatch Pickers (5 Fixed Colors) -->
-          <div class="grid grid-cols-2 gap-2.5 pt-1">
-            <div class="bg-[#09090b] border border-zinc-800 rounded-lg p-2 space-y-1.5">
-              <div class="flex items-center justify-between text-[11px]">
-                <span class="text-zinc-300 font-medium">底座顏色</span>
-                <span id="lblClrBase" class="text-[10px] font-mono-tech text-orange-400">黑</span>
-              </div>
-              <div class="flex items-center justify-between gap-1" id="baseColorSwatches">
-                <button type="button" data-color="#18181b" onclick="setBaseColor('#18181b')" class="w-6 h-6 rounded-full bg-[#18181b] border-2 border-orange-500 ring-2 ring-orange-500/40" title="黑"></button>
-                <button type="button" data-color="#facc15" onclick="setBaseColor('#facc15')" class="w-6 h-6 rounded-full bg-[#facc15] border-2 border-zinc-700" title="黃"></button>
-                <button type="button" data-color="#f97316" onclick="setBaseColor('#f97316')" class="w-6 h-6 rounded-full bg-[#f97316] border-2 border-zinc-700" title="橘"></button>
-                <button type="button" data-color="#ffffff" onclick="setBaseColor('#ffffff')" class="w-6 h-6 rounded-full bg-[#ffffff] border-2 border-zinc-700" title="白"></button>
-                <button type="button" data-color="#dc2626" onclick="setBaseColor('#dc2626')" class="w-6 h-6 rounded-full bg-[#dc2626] border-2 border-zinc-700" title="紅"></button>
-              </div>
-            </div>
-
-            <div class="bg-[#09090b] border border-zinc-800 rounded-lg p-2 space-y-1.5">
-              <div class="flex items-center justify-between text-[11px]">
-                <span class="text-zinc-300 font-medium">文字顏色</span>
-                <span id="lblClrText" class="text-[10px] font-mono-tech text-orange-400">橘</span>
-              </div>
-              <div class="flex items-center justify-between gap-1" id="textColorSwatches">
-                <button type="button" data-color="#18181b" onclick="setTextColor('#18181b')" class="w-6 h-6 rounded-full bg-[#18181b] border-2 border-zinc-700" title="黑"></button>
-                <button type="button" data-color="#facc15" onclick="setTextColor('#facc15')" class="w-6 h-6 rounded-full bg-[#facc15] border-2 border-zinc-700" title="黃"></button>
-                <button type="button" data-color="#f97316" onclick="setTextColor('#f97316')" class="w-6 h-6 rounded-full bg-[#f97316] border-2 border-orange-500 ring-2 ring-orange-500/40" title="橘"></button>
-                <button type="button" data-color="#ffffff" onclick="setTextColor('#ffffff')" class="w-6 h-6 rounded-full bg-[#ffffff] border-2 border-zinc-700" title="白"></button>
-                <button type="button" data-color="#dc2626" onclick="setTextColor('#dc2626')" class="w-6 h-6 rounded-full bg-[#dc2626] border-2 border-zinc-700" title="紅"></button>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -2402,31 +2333,18 @@
     };
 
     function updateColorSwatchesUI() {
-      const bName = FILAMENT_COLOR_NAMES[state.baseColor.toLowerCase()] || state.baseColor;
-      const tName = FILAMENT_COLOR_NAMES[state.textColor.toLowerCase()] || state.textColor;
-      document.getElementById('lblClrBase').textContent = bName;
-      document.getElementById('lblClrText').textContent = tName;
-
-      document.querySelectorAll('#baseColorSwatches button').forEach(btn => {
-        const active = btn.dataset.color === state.baseColor.toLowerCase();
-        btn.className = `w-6 h-6 rounded-full bg-[${btn.dataset.color}] border-2 ${active ? 'border-orange-500 ring-2 ring-orange-500/40' : 'border-zinc-700'}`;
+      document.querySelectorAll('#colorPresetGroup button').forEach(btn => {
+        const active = btn.dataset.textColor === state.textColor.toLowerCase();
+        btn.className = active
+          ? 'flex flex-col items-center p-2 rounded-lg bg-orange-500/15 hover:bg-zinc-800 border-2 border-orange-500 transition'
+          : 'flex flex-col items-center p-2 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition';
+        const label = btn.querySelector('span:last-child');
+        if (label) {
+          label.className = active
+            ? 'text-xs font-semibold text-white mt-1.5'
+            : 'text-xs font-semibold text-zinc-300 mt-1.5';
+        }
       });
-      document.querySelectorAll('#textColorSwatches button').forEach(btn => {
-        const active = btn.dataset.color === state.textColor.toLowerCase();
-        btn.className = `w-6 h-6 rounded-full bg-[${btn.dataset.color}] border-2 ${active ? 'border-orange-500 ring-2 ring-orange-500/40' : 'border-zinc-700'}`;
-      });
-    }
-
-    function setBaseColor(hex) {
-      state.baseColor = hex;
-      updateColorSwatchesUI();
-      updateMeshColorsOnly();
-    }
-
-    function setTextColor(hex) {
-      state.textColor = hex;
-      updateColorSwatchesUI();
-      updateMeshColorsOnly();
     }
 
     function applyColorPreset(baseHex, textHex) {
@@ -2482,8 +2400,6 @@
       bindDualInput('rngLineHeight', 'numLineHeight', 'valLineHeight', 'lineHeight', 2);
       bindDualInput('rngOffsetRadius', 'numOffsetRadius', 'valOffsetRadius', 'offsetRadius', 1);
 
-      bindRangeOnly('rngHoleInnerDia', 'valHoleInnerDia', 'holeInnerDia', 1);
-      bindRangeOnly('rngHoleWall', 'valHoleWall', 'holeWall', 1);
       bindRangeOnly('rngHoleOffsetX', 'valHoleOffsetX', 'holeOffsetX', 1);
       bindRangeOnly('rngHoleOffsetY', 'valHoleOffsetY', 'holeOffsetY', 1);
 
