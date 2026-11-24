@@ -35,6 +35,11 @@
       flex-direction: column;
     }
 
+    body.keychain-mode {
+      height: 100vh;
+      overflow: hidden;
+    }
+
     input[type="range"] {
       accent-color: var(--primary);
     }
@@ -111,8 +116,8 @@
 
     .keychain-frame-wrap {
       flex: 1;
+      min-height: 0;
       width: 100%;
-      height: calc(100vh - 69px);
       display: none;
     }
 
@@ -1867,6 +1872,7 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     const target = tab.dataset.appTab;
     document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t === tab));
     const isCard = target === 'card';
+    document.body.classList.toggle('keychain-mode', !isCard);
     document.getElementById('cardMain').style.display = isCard ? '' : 'none';
     document.getElementById('cardSpecPill').style.display = isCard ? '' : 'none';
     document.getElementById('pageTitle').textContent = isCard ? '客製壓克力小卡' : '客製 3D 文字吊飾';
