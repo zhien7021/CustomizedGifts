@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW" class="dark">
 <head>
   <meta charset="UTF-8" />
@@ -26,8 +26,8 @@
               card: '#18181c',
               hover: '#222228',
               border: '#27272a',
-              accent: '#facc15',
-              accentHover: '#eab308'
+              accent: '#f97316',
+              accentHover: '#ea580c'
             }
           }
         }
@@ -85,7 +85,7 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      background: #facc15;
+      background: #f97316;
       cursor: pointer;
       border: 2px solid #09090b;
       box-shadow: 0 0 8px rgba(250, 204, 21, 0.45);
@@ -120,7 +120,7 @@
     }
 
     .font-card-active {
-      border-color: #facc15 !important;
+      border-color: #f97316 !important;
       background: rgba(250, 204, 21, 0.08) !important;
       box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.35);
     }
@@ -139,7 +139,7 @@
         <section class="bg-[#18181c] border border-zinc-800/90 rounded-xl p-3.5 space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <i data-lucide="type" class="w-4 h-4 text-[#facc15]"></i>
+              <i data-lucide="type" class="w-4 h-4 text-[#f97316]"></i>
               <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-200">1. 多行文字與排版設定</h2>
             </div>
             <!-- Force Uppercase Toggle -->
@@ -154,7 +154,7 @@
               id="textInput"
               rows="2"
               placeholder="輸入文字（支援 Enter 換行）..."
-              class="w-full rounded-lg bg-[#09090b] border border-zinc-700/80 focus:border-[#facc15] focus:outline-none px-3 py-2 text-sm font-medium text-white placeholder-zinc-600 resize-y transition"
+              class="w-full rounded-lg bg-[#09090b] border border-zinc-700/80 focus:border-[#f97316] focus:outline-none px-3 py-2 text-sm font-medium text-white placeholder-zinc-600 resize-y transition"
               style="user-select: text;"
             >MAKER
 2026</textarea>
@@ -165,7 +165,7 @@
             <button id="align-left" onclick="setTextAlign('left')" class="py-1.5 rounded-md text-xs font-medium flex items-center justify-center gap-1.5 transition text-zinc-400 hover:text-white">
               <i data-lucide="align-left" class="w-3.5 h-3.5"></i> 靠左
             </button>
-            <button id="align-center" onclick="setTextAlign('center')" class="py-1.5 rounded-md text-xs font-medium flex items-center justify-center gap-1.5 transition bg-[#facc15] text-zinc-950 font-bold shadow">
+            <button id="align-center" onclick="setTextAlign('center')" class="py-1.5 rounded-md text-xs font-medium flex items-center justify-center gap-1.5 transition bg-[#f97316] text-white font-bold shadow">
               <i data-lucide="align-center" class="w-3.5 h-3.5"></i> 置中
             </button>
             <button id="align-right" onclick="setTextAlign('right')" class="py-1.5 rounded-md text-xs font-medium flex items-center justify-center gap-1.5 transition text-zinc-400 hover:text-white">
@@ -179,11 +179,11 @@
             <div>
               <div class="flex justify-between text-xs mb-1">
                 <span class="text-zinc-400">字體高度 (Font Size)</span>
-                <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valFontSize">16.0</span> mm</span>
+                <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valFontSize">16.0</span> mm</span>
               </div>
               <div class="flex items-center gap-2">
                 <input id="rngFontSize" type="range" min="6" max="45" step="0.5" value="16" class="flex-1" />
-                <input id="numFontSize" type="number" min="6" max="80" step="0.5" value="16" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#facc15] focus:outline-none" />
+                <input id="numFontSize" type="number" min="6" max="80" step="0.5" value="16" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#f97316] focus:outline-none" />
               </div>
             </div>
 
@@ -191,11 +191,11 @@
             <div>
               <div class="flex justify-between text-xs mb-1">
                 <span class="text-zinc-400">字元間距 (支援負值重疊)</span>
-                <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valLetterSpacing">0.4</span> mm</span>
+                <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valLetterSpacing">0.4</span> mm</span>
               </div>
               <div class="flex items-center gap-2">
                 <input id="rngLetterSpacing" type="range" min="-5.0" max="8.0" step="0.1" value="0.4" class="flex-1" />
-                <input id="numLetterSpacing" type="number" min="-10" max="20" step="0.1" value="0.4" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#facc15] focus:outline-none" />
+                <input id="numLetterSpacing" type="number" min="-10" max="20" step="0.1" value="0.4" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#f97316] focus:outline-none" />
               </div>
             </div>
 
@@ -203,11 +203,11 @@
             <div>
               <div class="flex justify-between text-xs mb-1">
                 <span class="text-zinc-400">多行行距倍率 (Line Spacing)</span>
-                <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valLineHeight">1.08</span> ×</span>
+                <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valLineHeight">1.08</span> ×</span>
               </div>
               <div class="flex items-center gap-2">
                 <input id="rngLineHeight" type="range" min="0.65" max="1.80" step="0.02" value="1.08" class="flex-1" />
-                <input id="numLineHeight" type="number" min="0.5" max="3.0" step="0.02" value="1.08" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#facc15] focus:outline-none" />
+                <input id="numLineHeight" type="number" min="0.5" max="3.0" step="0.02" value="1.08" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#f97316] focus:outline-none" />
               </div>
             </div>
           </div>
@@ -217,10 +217,10 @@
         <section class="bg-[#18181c] border border-zinc-800/90 rounded-xl p-3.5 space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <i data-lucide="sparkles" class="w-4 h-4 text-[#facc15]"></i>
+              <i data-lucide="sparkles" class="w-4 h-4 text-[#f97316]"></i>
               <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-200">2. 文字風格選項 & 自訂字體</h2>
             </div>
-            <span id="currentFontBadge" class="text-[11px] font-mono-tech text-[#facc15] bg-yellow-400/10 px-2 py-0.5 rounded border border-yellow-400/20">Fredoka Bold</span>
+            <span id="currentFontBadge" class="text-[11px] font-mono-tech text-[#f97316] bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">Fredoka Bold</span>
           </div>
 
           <!-- Curated Folder Font Style Grid -->
@@ -232,11 +232,11 @@
           <div
             id="dropZone"
             onclick="document.getElementById('fontFileInput').click()"
-            class="border border-dashed border-zinc-700 hover:border-[#facc15] bg-[#09090b]/70 hover:bg-yellow-400/5 rounded-lg p-2.5 text-center cursor-pointer transition group"
+            class="border border-dashed border-zinc-700 hover:border-[#f97316] bg-[#09090b]/70 hover:bg-orange-500/5 rounded-lg p-2.5 text-center cursor-pointer transition group"
           >
             <input id="fontFileInput" type="file" accept=".ttf,.otf,.woff" class="hidden" />
-            <div class="flex items-center justify-center gap-2 text-xs text-zinc-300 group-hover:text-[#facc15]">
-              <i data-lucide="upload-cloud" class="w-4 h-4 text-[#facc15]"></i>
+            <div class="flex items-center justify-center gap-2 text-xs text-zinc-300 group-hover:text-[#f97316]">
+              <i data-lucide="upload-cloud" class="w-4 h-4 text-[#f97316]"></i>
               <span id="uploadLabel" class="font-medium">拖曳或點擊上傳自訂字體 (.ttf / .otf / .woff)</span>
             </div>
             <p class="text-[10px] text-zinc-500 mt-0.5">支援中文／英文字型檔即時貝茲曲線向量解析</p>
@@ -247,7 +247,7 @@
         <section class="bg-[#18181c] border border-zinc-800/90 rounded-xl p-3.5 space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <i data-lucide="circle-dot" class="w-4 h-4 text-[#facc15]"></i>
+              <i data-lucide="circle-dot" class="w-4 h-4 text-[#f97316]"></i>
               <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-200">3. 底座 EDT 膨脹與圓環掛孔</h2>
             </div>
             <span class="text-[10px] font-mono-tech text-zinc-400">16 px/mm</span>
@@ -257,11 +257,11 @@
           <div>
             <div class="flex justify-between text-xs mb-1">
               <span class="text-zinc-400">底座外擴圓角半徑 (Offset Radius)</span>
-              <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valOffsetRadius">3.2</span> mm</span>
+              <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valOffsetRadius">3.2</span> mm</span>
             </div>
             <div class="flex items-center gap-2">
               <input id="rngOffsetRadius" type="range" min="0.8" max="10.0" step="0.2" value="3.2" class="flex-1" />
-              <input id="numOffsetRadius" type="number" min="0.5" max="15.0" step="0.2" value="3.2" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#facc15] focus:outline-none" />
+              <input id="numOffsetRadius" type="number" min="0.5" max="15.0" step="0.2" value="3.2" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#f97316] focus:outline-none" />
             </div>
           </div>
 
@@ -272,7 +272,7 @@
               <button id="hole-top-left" onclick="setHolePosition('top-left')" class="py-1.5 rounded text-xs font-medium transition text-zinc-400 hover:text-white">
                 左上
               </button>
-              <button id="hole-mid-left" onclick="setHolePosition('mid-left')" class="py-1.5 rounded text-xs font-medium transition bg-[#facc15] text-zinc-950 font-bold shadow">
+              <button id="hole-mid-left" onclick="setHolePosition('mid-left')" class="py-1.5 rounded text-xs font-medium transition bg-[#f97316] text-white font-bold shadow">
                 左中
               </button>
               <button id="hole-top-right" onclick="setHolePosition('top-right')" class="py-1.5 rounded text-xs font-medium transition text-zinc-400 hover:text-white">
@@ -290,7 +290,7 @@
               <div>
                 <div class="flex justify-between text-[11px] mb-1">
                   <span class="text-zinc-400">內孔直徑</span>
-                  <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valHoleInnerDia">4.5</span> mm</span>
+                  <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valHoleInnerDia">4.5</span> mm</span>
                 </div>
                 <input id="rngHoleInnerDia" type="range" min="2.0" max="10.0" step="0.5" value="4.5" class="w-full" />
               </div>
@@ -298,7 +298,7 @@
               <div>
                 <div class="flex justify-between text-[11px] mb-1">
                   <span class="text-zinc-400">外環壁厚</span>
-                  <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valHoleWall">3.0</span> mm</span>
+                  <span class="font-mono-tech text-[#f97316] font-semibold"><span id="valHoleWall">3.0</span> mm</span>
                 </div>
                 <input id="rngHoleWall" type="range" min="1.5" max="6.0" step="0.2" value="3.0" class="w-full" />
               </div>
@@ -402,7 +402,7 @@
               </div>
               <div class="flex items-center justify-between gap-1" id="textColorSwatches">
                 <button type="button" data-color="#18181b" onclick="setTextColor('#18181b')" class="w-6 h-6 rounded-full bg-[#18181b] border-2 border-zinc-700" title="黑"></button>
-                <button type="button" data-color="#facc15" onclick="setTextColor('#facc15')" class="w-6 h-6 rounded-full bg-[#facc15] border-2 border-orange-500 ring-2 ring-orange-500/40" title="黃"></button>
+                <button type="button" data-color="#f97316" onclick="setTextColor('#f97316')" class="w-6 h-6 rounded-full bg-[#f97316] border-2 border-orange-500 ring-2 ring-orange-500/40" title="黃"></button>
                 <button type="button" data-color="#f97316" onclick="setTextColor('#f97316')" class="w-6 h-6 rounded-full bg-[#f97316] border-2 border-zinc-700" title="橘"></button>
                 <button type="button" data-color="#ffffff" onclick="setTextColor('#ffffff')" class="w-6 h-6 rounded-full bg-[#ffffff] border-2 border-zinc-700" title="白"></button>
                 <button type="button" data-color="#dc2626" onclick="setTextColor('#dc2626')" class="w-6 h-6 rounded-full bg-[#dc2626] border-2 border-zinc-700" title="紅"></button>
@@ -485,7 +485,7 @@
         <div class="hud-glass rounded-xl p-3.5 shadow-2xl">
           <div class="flex items-center justify-between gap-4 mb-2">
             <span class="text-[10px] font-mono-tech uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-              <i data-lucide="ruler" class="w-3.5 h-3.5 text-[#facc15]"></i>
+              <i data-lucide="ruler" class="w-3.5 h-3.5 text-[#f97316]"></i>
               模型實體尺寸 (Bounding Box)
             </span>
             <span id="hudTriangles" class="text-[10px] font-mono-tech text-zinc-500">0 tris</span>
@@ -509,7 +509,7 @@
         <!-- 0.20mm Layer Height Slicer Filament Swap Guide -->
         <div class="hud-glass rounded-xl p-3.5 shadow-2xl">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] font-mono-tech uppercase tracking-wider text-[#facc15] font-semibold flex items-center gap-1.5">
+            <span class="text-[10px] font-mono-tech uppercase tracking-wider text-[#f97316] font-semibold flex items-center gap-1.5">
               <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
               0.20mm 層高 · 切片換料層數指引
             </span>
@@ -525,7 +525,7 @@
               <span id="hudBaseLayers" class="text-zinc-200">第 1 ~ 12 層 (0.0~2.4mm)</span>
             </div>
 
-            <div class="flex items-center justify-between px-2 py-1 rounded bg-yellow-400/15 border border-yellow-400/35 text-[#facc15] font-semibold">
+            <div class="flex items-center justify-between px-2 py-1 rounded bg-orange-500/15 border border-orange-500/35 text-[#f97316] font-semibold">
               <span class="flex items-center gap-1.5">
                 <i data-lucide="pause-circle" class="w-3.5 h-3.5"></i>
                 <span>暫停換料層 (M600)</span>
@@ -535,7 +535,7 @@
 
             <div class="flex items-center justify-between text-zinc-300">
               <span class="flex items-center gap-1.5">
-                <span id="hudSwatchText" class="w-2.5 h-2.5 rounded-full bg-[#facc15] border border-zinc-600 inline-block"></span>
+                <span id="hudSwatchText" class="w-2.5 h-2.5 rounded-full bg-[#f97316] border border-zinc-600 inline-block"></span>
                 <span>文字層 (Text)</span>
               </span>
               <span id="hudTextLayers" class="text-zinc-200">第 13 ~ 20 層 (2.4~4.0mm)</span>
@@ -560,7 +560,7 @@
       >
         <div class="flex items-center justify-between mb-1.5 px-1">
           <div class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-[#facc15]"></span>
+            <span class="w-2 h-2 rounded-full bg-[#f97316]"></span>
             <span class="text-[11px] font-bold text-zinc-200">2D 輪廓膨脹小視窗 (EDT)</span>
           </div>
           <div class="flex items-center gap-1">
@@ -573,7 +573,7 @@
         <div class="relative bg-[#070709] border border-zinc-800/90 rounded-lg overflow-hidden">
           <canvas id="pipCanvas" width="320" height="210" class="w-full h-auto block"></canvas>
           <div class="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-mono-tech text-zinc-400 pointer-events-none">
-            <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-[#facc15] inline-block"></span> 外輪廓</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-[#f97316] inline-block"></span> 外輪廓</span>
             <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-cyan-400 inline-block"></span> 內部孔洞</span>
             <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-white/80 inline-block"></span> 文字向量</span>
           </div>
@@ -618,7 +618,7 @@
 
       // Colors & View
       baseColor: '#18181b',
-      textColor: '#facc15',
+      textColor: '#f97316',
       wireframe: false,
       pipExpanded: false,
 
@@ -687,7 +687,7 @@
         btn.innerHTML = `
           <div class="flex items-center justify-between w-full mb-1">
             <span class="text-[10px] font-medium text-zinc-400 truncate">${f.style}</span>
-            ${isSelected ? '<span class="w-1.5 h-1.5 rounded-full bg-[#facc15] shrink-0"></span>' : ''}
+            ${isSelected ? '<span class="w-1.5 h-1.5 rounded-full bg-[#f97316] shrink-0"></span>' : ''}
           </div>
           <div class="text-sm text-white truncate tracking-wide py-0.5" style="font-family: '${previewFamily}', sans-serif;">
             ${f.name}
@@ -2010,8 +2010,8 @@
         ctx.fill('evenodd');
       }
 
-      // 2. Stroke Base Outer Contours in Bright Yellow (#facc15)
-      ctx.strokeStyle = '#facc15';
+      // 2. Stroke Base Outer Contours in Bright Yellow (#f97316)
+      ctx.strokeStyle = '#f97316';
       ctx.lineWidth = 1.8;
       for (const rec of baseRecords) {
         ctx.beginPath();
@@ -2317,7 +2317,7 @@
       if (textEl) textEl.textContent = msg;
       if (dotEl) {
         dotEl.className = busy
-          ? 'w-2 h-2 rounded-full bg-[#facc15] animate-ping'
+          ? 'w-2 h-2 rounded-full bg-[#f97316] animate-ping'
           : 'w-2 h-2 rounded-full bg-emerald-400';
       }
     }
@@ -2358,7 +2358,7 @@
       state.forceUppercase = !state.forceUppercase;
       const btn = document.getElementById('btnUppercase');
       if (state.forceUppercase) {
-        btn.className = 'px-2 py-1 rounded text-[11px] font-mono-tech font-bold border transition bg-[#facc15] border-[#facc15] text-zinc-950 flex items-center gap-1';
+        btn.className = 'px-2 py-1 rounded text-[11px] font-mono-tech font-bold border transition bg-[#f97316] border-[#f97316] text-white flex items-center gap-1';
       } else {
         btn.className = 'px-2 py-1 rounded text-[11px] font-mono-tech font-semibold border transition bg-zinc-900 border-zinc-700 text-zinc-400 hover:text-white flex items-center gap-1';
       }
@@ -2370,7 +2370,7 @@
       ['left', 'center', 'right'].forEach(a => {
         const btn = document.getElementById(`align-${a}`);
         if (a === align) {
-          btn.className = 'py-1.5 rounded-md text-xs font-bold flex items-center justify-center gap-1.5 transition bg-[#facc15] text-zinc-950 shadow';
+          btn.className = 'py-1.5 rounded-md text-xs font-bold flex items-center justify-center gap-1.5 transition bg-[#f97316] text-white shadow';
         } else {
           btn.className = 'py-1.5 rounded-md text-xs font-medium flex items-center justify-center gap-1.5 transition text-zinc-400 hover:text-white';
         }
@@ -2383,7 +2383,7 @@
       ['top-left', 'mid-left', 'top-right', 'none'].forEach(p => {
         const btn = document.getElementById(`hole-${p}`);
         if (p === pos) {
-          btn.className = 'py-1.5 rounded text-xs font-bold transition bg-[#facc15] text-zinc-950 shadow';
+          btn.className = 'py-1.5 rounded text-xs font-bold transition bg-[#f97316] text-white shadow';
         } else {
           btn.className = 'py-1.5 rounded text-xs font-medium transition text-zinc-400 hover:text-white';
         }
@@ -2444,7 +2444,7 @@
       state.wireframe = !state.wireframe;
       const btn = document.getElementById('btnWireframe');
       if (state.wireframe) {
-        btn.className = 'px-2.5 py-1.5 rounded-md bg-yellow-400/20 border border-[#facc15] text-xs text-[#facc15] flex items-center gap-1.5 transition';
+        btn.className = 'px-2.5 py-1.5 rounded-md bg-orange-500/20 border border-[#f97316] text-xs text-[#f97316] flex items-center gap-1.5 transition';
       } else {
         btn.className = 'px-2.5 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition';
       }
@@ -2500,14 +2500,14 @@
       const dropZone = document.getElementById('dropZone');
       dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
-        dropZone.classList.add('border-[#facc15]', 'bg-yellow-400/10');
+        dropZone.classList.add('border-[#f97316]', 'bg-orange-500/10');
       });
       dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('border-[#facc15]', 'bg-yellow-400/10');
+        dropZone.classList.remove('border-[#f97316]', 'bg-orange-500/10');
       });
       dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropZone.classList.remove('border-[#facc15]', 'bg-yellow-400/10');
+        dropZone.classList.remove('border-[#f97316]', 'bg-orange-500/10');
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
           handleCustomFontFile(e.dataTransfer.files[0]);
         }
