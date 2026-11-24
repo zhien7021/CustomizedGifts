@@ -128,49 +128,6 @@
 </head>
 <body class="h-screen w-screen flex flex-col bg-[#09090b] text-zinc-100 overflow-hidden">
 
-  <!-- Top Header Workbench Bar -->
-  <header class="h-13 shrink-0 bg-[#121215] border-b border-zinc-800/90 px-4 py-2.5 flex items-center justify-between z-20">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-lg bg-[#facc15] text-zinc-950 flex items-center justify-center font-black shadow-lg shadow-yellow-400/20">
-        <i data-lucide="layers" class="w-5 h-5 stroke-[2.5]"></i>
-      </div>
-      <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-sm font-bold tracking-wider uppercase text-white">KeyForge <span class="text-[#facc15]">3D</span></h1>
-          <span class="text-[10px] font-mono-tech uppercase px-1.5 py-0.5 rounded bg-yellow-400/15 text-[#facc15] border border-yellow-400/30 font-semibold">EDT + Marching Squares</span>
-        </div>
-        <p class="text-[11px] text-zinc-400">雙色 3D 列印鑰匙圈產生器（自訂字體離線工作台）</p>
-      </div>
-    </div>
-
-    <!-- Center Status Indicator -->
-    <div id="statusBadge" class="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-300">
-      <span id="statusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span id="statusText" class="font-mono-tech text-[11px]">就緒 · Z 軸朝上座標系 (16 px/mm EDT)</span>
-    </div>
-
-    <!-- Quick Camera & Viewport Controls -->
-    <div class="flex items-center gap-1.5">
-      <button onclick="setCameraView('iso')" class="px-2.5 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition" title="等角視圖 (Isometric)">
-        <i data-lucide="box" class="w-3.5 h-3.5 text-[#facc15]"></i>
-        <span class="hidden sm:inline">等角</span>
-      </button>
-      <button onclick="setCameraView('top')" class="px-2.5 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition" title="正上方俯視圖 (Top XY)">
-        <i data-lucide="compass" class="w-3.5 h-3.5 text-sky-400"></i>
-        <span class="hidden sm:inline">俯視 XY</span>
-      </button>
-      <button onclick="setCameraView('front')" class="px-2.5 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition" title="前視圖看層高 (Front XZ)">
-        <i data-lucide="align-end-horizontal" class="w-3.5 h-3.5 text-emerald-400"></i>
-        <span class="hidden sm:inline">側視 Z層</span>
-      </button>
-      <div class="h-4 w-[1px] bg-zinc-800 mx-0.5"></div>
-      <button id="btnWireframe" onclick="toggleWireframe()" class="px-2.5 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition" title="切換三角網格線框檢視">
-        <i data-lucide="grid" class="w-3.5 h-3.5"></i>
-        <span class="hidden lg:inline">線框</span>
-      </button>
-    </div>
-  </header>
-
   <!-- Main Workspace Container -->
   <div class="flex-1 flex overflow-hidden">
 
@@ -367,58 +324,29 @@
           </div>
         </section>
 
-        <!-- SECTION 4: 雙層 Z 軸擠出設定 -->
+        <!-- SECTION 4: 雙色耗材配色預覽（僅提供 黑、黃、橘、白、紅） -->
         <section class="bg-[#18181c] border border-zinc-800/90 rounded-xl p-3.5 space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <i data-lucide="move-vertical" class="w-4 h-4 text-[#facc15]"></i>
-              <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-200">4. 雙層 Z 軸擠出高度</h2>
+              <i data-lucide="palette" class="w-4 h-4 text-[#f97316]"></i>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-200">4. 雙色耗材配色選擇</h2>
             </div>
-            <span class="text-[10px] font-mono-tech text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">0.05mm 嵌合防縫隙</span>
-          </div>
-
-          <div class="space-y-2.5">
-            <!-- Base Height (Z = 0 -> baseHeight) -->
-            <div>
-              <div class="flex justify-between text-xs mb-1">
-                <span class="text-zinc-400">底座高度 (Base Z: 0 → H)</span>
-                <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valBaseHeight">2.4</span> mm</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <input id="rngBaseHeight" type="range" min="0.8" max="6.0" step="0.2" value="2.4" class="flex-1" />
-                <input id="numBaseHeight" type="number" min="0.4" max="15.0" step="0.2" value="2.4" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#facc15] focus:outline-none" />
-              </div>
-            </div>
-
-            <!-- Text Height (Z = baseHeight - 0.05 -> baseHeight + textHeight) -->
-            <div>
-              <div class="flex justify-between text-xs mb-1">
-                <span class="text-zinc-400">文字凸起高度 (Text Z Height)</span>
-                <span class="font-mono-tech text-[#facc15] font-semibold"><span id="valTextHeight">1.6</span> mm</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <input id="rngTextHeight" type="range" min="0.4" max="6.0" step="0.2" value="1.6" class="flex-1" />
-                <input id="numTextHeight" type="number" min="0.2" max="15.0" step="0.2" value="1.6" class="w-16 bg-[#09090b] border border-zinc-800 rounded px-2 py-1 text-xs font-mono-tech text-right text-zinc-200 focus:border-[#facc15] focus:outline-none" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION 5: 雙色耗材預覽 -->
-        <section class="bg-[#18181c] border border-zinc-800/90 rounded-xl p-3.5 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <i data-lucide="palette" class="w-4 h-4 text-[#facc15]"></i>
-              <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-200">5. 雙色耗材配色預覽</h2>
-            </div>
-            <button onclick="swapColors()" class="text-[11px] text-zinc-400 hover:text-[#facc15] flex items-center gap-1 transition">
+            <button onclick="swapColors()" class="text-[11px] text-zinc-400 hover:text-[#f97316] flex items-center gap-1 transition">
               <i data-lucide="arrow-left-right" class="w-3 h-3"></i> 對調底/字顏色
             </button>
           </div>
 
-          <!-- Preset Swatches -->
+          <!-- Quick Presets (Only Black, Yellow, Orange, White, Red) -->
           <div class="grid grid-cols-5 gap-1.5">
-            <button onclick="applyColorPreset('#18181b', '#facc15')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底亮黃">
+            <button type="button" onclick="applyColorPreset('#18181b', '#f97316')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底亮橘">
+              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
+                <span class="w-1/2 h-full bg-[#18181b]"></span>
+                <span class="w-1/2 h-full bg-[#f97316]"></span>
+              </div>
+              <span class="text-[10px] text-zinc-300 mt-1">黑底亮橘</span>
+            </button>
+
+            <button type="button" onclick="applyColorPreset('#18181b', '#facc15')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底亮黃">
               <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
                 <span class="w-1/2 h-full bg-[#18181b]"></span>
                 <span class="w-1/2 h-full bg-[#facc15]"></span>
@@ -426,7 +354,7 @@
               <span class="text-[10px] text-zinc-300 mt-1">黑底亮黃</span>
             </button>
 
-            <button onclick="applyColorPreset('#18181b', '#ffffff')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底純白">
+            <button type="button" onclick="applyColorPreset('#18181b', '#ffffff')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="黑底純白">
               <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
                 <span class="w-1/2 h-full bg-[#18181b]"></span>
                 <span class="w-1/2 h-full bg-[#ffffff]"></span>
@@ -434,52 +362,52 @@
               <span class="text-[10px] text-zinc-300 mt-1">黑底純白</span>
             </button>
 
-            <button onclick="applyColorPreset('#1a1025', '#ff2a85')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="霓虹粉">
+            <button type="button" onclick="applyColorPreset('#dc2626', '#ffffff')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="紅底純白">
               <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
-                <span class="w-1/2 h-full bg-[#1a1025]"></span>
-                <span class="w-1/2 h-full bg-[#ff2a85]"></span>
-              </div>
-              <span class="text-[10px] text-zinc-300 mt-1">霓虹粉</span>
-            </button>
-
-            <button onclick="applyColorPreset('#111c16', '#22c55e')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="亮綠">
-              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
-                <span class="w-1/2 h-full bg-[#111c16]"></span>
-                <span class="w-1/2 h-full bg-[#22c55e]"></span>
-              </div>
-              <span class="text-[10px] text-zinc-300 mt-1">亮綠</span>
-            </button>
-
-            <button onclick="applyColorPreset('#b91c1c', '#ffffff')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="正紅">
-              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
-                <span class="w-1/2 h-full bg-[#b91c1c]"></span>
+                <span class="w-1/2 h-full bg-[#dc2626]"></span>
                 <span class="w-1/2 h-full bg-[#ffffff]"></span>
               </div>
-              <span class="text-[10px] text-zinc-300 mt-1">正紅</span>
+              <span class="text-[10px] text-zinc-300 mt-1">紅底純白</span>
+            </button>
+
+            <button type="button" onclick="applyColorPreset('#ffffff', '#18181b')" class="flex flex-col items-center p-1.5 rounded-lg bg-[#09090b] hover:bg-zinc-800 border border-zinc-800 transition" title="白底純黑">
+              <div class="flex w-7 h-4 rounded overflow-hidden border border-zinc-700">
+                <span class="w-1/2 h-full bg-[#ffffff]"></span>
+                <span class="w-1/2 h-full bg-[#18181b]"></span>
+              </div>
+              <span class="text-[10px] text-zinc-300 mt-1">白底純黑</span>
             </button>
           </div>
 
-          <!-- Custom Color Pickers -->
+          <!-- Individual Base / Text Swatch Pickers (5 Fixed Colors) -->
           <div class="grid grid-cols-2 gap-2.5 pt-1">
-            <label class="flex items-center justify-between bg-[#09090b] border border-zinc-800 rounded-lg px-2.5 py-1.5 cursor-pointer hover:border-zinc-700">
-              <div class="flex items-center gap-2">
-                <input id="clrBase" type="color" value="#18181b" class="w-6 h-6" />
-                <div>
-                  <div class="text-[11px] font-medium text-zinc-200">底座耗材色</div>
-                  <div id="lblClrBase" class="text-[10px] font-mono-tech text-zinc-500">#18181B</div>
-                </div>
+            <div class="bg-[#09090b] border border-zinc-800 rounded-lg p-2 space-y-1.5">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-zinc-300 font-medium">底座顏色</span>
+                <span id="lblClrBase" class="text-[10px] font-mono-tech text-orange-400">黑</span>
               </div>
-            </label>
+              <div class="flex items-center justify-between gap-1" id="baseColorSwatches">
+                <button type="button" data-color="#18181b" onclick="setBaseColor('#18181b')" class="w-6 h-6 rounded-full bg-[#18181b] border-2 border-orange-500 ring-2 ring-orange-500/40" title="黑"></button>
+                <button type="button" data-color="#facc15" onclick="setBaseColor('#facc15')" class="w-6 h-6 rounded-full bg-[#facc15] border-2 border-zinc-700" title="黃"></button>
+                <button type="button" data-color="#f97316" onclick="setBaseColor('#f97316')" class="w-6 h-6 rounded-full bg-[#f97316] border-2 border-zinc-700" title="橘"></button>
+                <button type="button" data-color="#ffffff" onclick="setBaseColor('#ffffff')" class="w-6 h-6 rounded-full bg-[#ffffff] border-2 border-zinc-700" title="白"></button>
+                <button type="button" data-color="#dc2626" onclick="setBaseColor('#dc2626')" class="w-6 h-6 rounded-full bg-[#dc2626] border-2 border-zinc-700" title="紅"></button>
+              </div>
+            </div>
 
-            <label class="flex items-center justify-between bg-[#09090b] border border-zinc-800 rounded-lg px-2.5 py-1.5 cursor-pointer hover:border-zinc-700">
-              <div class="flex items-center gap-2">
-                <input id="clrText" type="color" value="#facc15" class="w-6 h-6" />
-                <div>
-                  <div class="text-[11px] font-medium text-zinc-200">文字耗材色</div>
-                  <div id="lblClrText" class="text-[10px] font-mono-tech text-zinc-500">#FACC15</div>
-                </div>
+            <div class="bg-[#09090b] border border-zinc-800 rounded-lg p-2 space-y-1.5">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-zinc-300 font-medium">文字顏色</span>
+                <span id="lblClrText" class="text-[10px] font-mono-tech text-orange-400">黃</span>
               </div>
-            </label>
+              <div class="flex items-center justify-between gap-1" id="textColorSwatches">
+                <button type="button" data-color="#18181b" onclick="setTextColor('#18181b')" class="w-6 h-6 rounded-full bg-[#18181b] border-2 border-zinc-700" title="黑"></button>
+                <button type="button" data-color="#facc15" onclick="setTextColor('#facc15')" class="w-6 h-6 rounded-full bg-[#facc15] border-2 border-orange-500 ring-2 ring-orange-500/40" title="黃"></button>
+                <button type="button" data-color="#f97316" onclick="setTextColor('#f97316')" class="w-6 h-6 rounded-full bg-[#f97316] border-2 border-zinc-700" title="橘"></button>
+                <button type="button" data-color="#ffffff" onclick="setTextColor('#ffffff')" class="w-6 h-6 rounded-full bg-[#ffffff] border-2 border-zinc-700" title="白"></button>
+                <button type="button" data-color="#dc2626" onclick="setTextColor('#dc2626')" class="w-6 h-6 rounded-full bg-[#dc2626] border-2 border-zinc-700" title="紅"></button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -530,6 +458,26 @@
     <main class="flex-1 relative bg-[#09090b] overflow-hidden" id="viewportContainer">
       <!-- Three.js Canvas Mount -->
       <div id="threeMount" class="w-full h-full"></div>
+
+      <!-- Top-Right Quick Camera Controls -->
+      <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5 hud-glass rounded-xl p-1.5 shadow-xl">
+        <button onclick="setCameraView('iso')" class="px-2.5 py-1.5 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition" title="等角視圖 (Isometric)">
+          <i data-lucide="box" class="w-3.5 h-3.5 text-[#f97316]"></i>
+          <span class="hidden sm:inline">等角</span>
+        </button>
+        <button onclick="setCameraView('top')" class="px-2.5 py-1.5 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition" title="正上方俯視圖 (Top XY)">
+          <i data-lucide="compass" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span class="hidden sm:inline">俯視 XY</span>
+        </button>
+        <button onclick="setCameraView('front')" class="px-2.5 py-1.5 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition" title="前視圖看層高 (Front XZ)">
+          <i data-lucide="align-end-horizontal" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span class="hidden sm:inline">側視 Z層</span>
+        </button>
+        <button id="btnWireframe" onclick="toggleWireframe()" class="px-2.5 py-1.5 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 transition" title="切換三角網格線框檢視">
+          <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+          <span class="hidden lg:inline">線框</span>
+        </button>
+      </div>
 
       <!-- Top-Left Real-Time Dimensions & Layer Change HUD -->
       <div class="absolute top-4 left-4 z-10 pointer-events-none space-y-2.5 max-w-xs sm:max-w-sm">
@@ -2323,7 +2271,7 @@
             base64,
             customerClass,
             customerName,
-            cardLabel: `${state.text || ''} (${state.fontKey || ''})`,
+            cardLabel: `${state.text || ''} (${state.fontKey || ''} | 底:${FILAMENT_COLOR_NAMES[state.baseColor] || state.baseColor} / 字:${FILAMENT_COLOR_NAMES[state.textColor] || state.textColor})`,
             preset: '3d-keychain',
             timestamp: now.toISOString(),
           }),
@@ -2445,13 +2393,46 @@
       scheduleRebuild();
     }
 
+    const FILAMENT_COLOR_NAMES = {
+      '#18181b': '黑',
+      '#facc15': '黃',
+      '#f97316': '橘',
+      '#ffffff': '白',
+      '#dc2626': '紅'
+    };
+
+    function updateColorSwatchesUI() {
+      const bName = FILAMENT_COLOR_NAMES[state.baseColor.toLowerCase()] || state.baseColor;
+      const tName = FILAMENT_COLOR_NAMES[state.textColor.toLowerCase()] || state.textColor;
+      document.getElementById('lblClrBase').textContent = bName;
+      document.getElementById('lblClrText').textContent = tName;
+
+      document.querySelectorAll('#baseColorSwatches button').forEach(btn => {
+        const active = btn.dataset.color === state.baseColor.toLowerCase();
+        btn.className = `w-6 h-6 rounded-full bg-[${btn.dataset.color}] border-2 ${active ? 'border-orange-500 ring-2 ring-orange-500/40' : 'border-zinc-700'}`;
+      });
+      document.querySelectorAll('#textColorSwatches button').forEach(btn => {
+        const active = btn.dataset.color === state.textColor.toLowerCase();
+        btn.className = `w-6 h-6 rounded-full bg-[${btn.dataset.color}] border-2 ${active ? 'border-orange-500 ring-2 ring-orange-500/40' : 'border-zinc-700'}`;
+      });
+    }
+
+    function setBaseColor(hex) {
+      state.baseColor = hex;
+      updateColorSwatchesUI();
+      updateMeshColorsOnly();
+    }
+
+    function setTextColor(hex) {
+      state.textColor = hex;
+      updateColorSwatchesUI();
+      updateMeshColorsOnly();
+    }
+
     function applyColorPreset(baseHex, textHex) {
       state.baseColor = baseHex;
       state.textColor = textHex;
-      document.getElementById('clrBase').value = baseHex;
-      document.getElementById('clrText').value = textHex;
-      document.getElementById('lblClrBase').textContent = baseHex.toUpperCase();
-      document.getElementById('lblClrText').textContent = textHex.toUpperCase();
+      updateColorSwatchesUI();
       updateMeshColorsOnly();
     }
 
@@ -2500,25 +2481,13 @@
       bindDualInput('rngLetterSpacing', 'numLetterSpacing', 'valLetterSpacing', 'letterSpacing', 1);
       bindDualInput('rngLineHeight', 'numLineHeight', 'valLineHeight', 'lineHeight', 2);
       bindDualInput('rngOffsetRadius', 'numOffsetRadius', 'valOffsetRadius', 'offsetRadius', 1);
-      bindDualInput('rngBaseHeight', 'numBaseHeight', 'valBaseHeight', 'baseHeight', 1);
-      bindDualInput('rngTextHeight', 'numTextHeight', 'valTextHeight', 'textHeight', 1);
 
       bindRangeOnly('rngHoleInnerDia', 'valHoleInnerDia', 'holeInnerDia', 1);
       bindRangeOnly('rngHoleWall', 'valHoleWall', 'holeWall', 1);
       bindRangeOnly('rngHoleOffsetX', 'valHoleOffsetX', 'holeOffsetX', 1);
       bindRangeOnly('rngHoleOffsetY', 'valHoleOffsetY', 'holeOffsetY', 1);
 
-      // Color pickers
-      document.getElementById('clrBase').addEventListener('input', (e) => {
-        state.baseColor = e.target.value;
-        document.getElementById('lblClrBase').textContent = e.target.value.toUpperCase();
-        updateMeshColorsOnly();
-      });
-      document.getElementById('clrText').addEventListener('input', (e) => {
-        state.textColor = e.target.value;
-        document.getElementById('lblClrText').textContent = e.target.value.toUpperCase();
-        updateMeshColorsOnly();
-      });
+      updateColorSwatchesUI();
 
       // File Upload & Drag-and-Drop
       const fileInput = document.getElementById('fontFileInput');
