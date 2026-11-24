@@ -1123,6 +1123,12 @@ function drawCardToContext(ctx, scaleFactor = 1, forceSolidBg = null) {
   const isDarkText = !(effectiveBg === 'black' || state.preset === 'music-dark');
   const mainTextColor = isDarkText ? '#000000' : '#FFFFFF';
 
+  // Proportional 1 mm inward inset on all 4 sides (1 mm @ 300 DPI = 300 / 25.4 ≈ 11.811 px)
+  const insetPx = 300 / 25.4;
+  const innerScale = Math.min((W - 2 * insetPx) / W, (H - 2 * insetPx) / H);
+  ctx.translate((W - W * innerScale) / 2, (H - H * innerScale) / 2);
+  ctx.scale(innerScale, innerScale);
+
   // 2. Main Photo Frame (X=24, Y=93, W=590, H=591)
   const frameX = 24;
   const frameY = state.mode === 'ig' ? 94 : 93;
