@@ -640,7 +640,7 @@
 
   <header>
     <div class="brand">
-      <span class="brand-badge">FRC 10114 校慶專題</span>
+      <span class="brand-badge">FRC10114</span>
       <h1>客製壓克力小卡產生器</h1>
     </div>
     <div class="spec-pill">
@@ -855,8 +855,7 @@
         <div class="form-group">
           <label>匯出圖片底色模式</label>
           <div class="btn-row" id="bgModeGroup">
-            <button type="button" class="btn-sm active" data-bg="transparent">透明底（壓克力直噴推薦）</button>
-            <button type="button" class="btn-sm" data-bg="white">純白底 (#FFFFFF)</button>
+            <button type="button" class="btn-sm active" data-bg="white">純白底 (#FFFFFF)</button>
             <button type="button" class="btn-sm" data-bg="black">純黑底 (#000000)</button>
             <button type="button" class="btn-sm" data-bg="custom">自訂底色</button>
           </div>
@@ -928,7 +927,7 @@
 const state = {
   preset: 'music-light', // 'music-light' | 'music-dark' | 'ig-card' | 'music-band'
   mode: 'music',         // 'music' | 'ig'
-  bgMode: 'transparent', // 'transparent' | 'white' | 'black' | 'custom'
+  bgMode: 'white', // 'white' | 'black' | 'custom'
   customBg: '#fff8f0',
 
   // Photo transform
@@ -1517,12 +1516,12 @@ function applyPreset(preset) {
     state.musicTitle = 'Hello my Love';
     state.musicArtist = 'Carina';
     activePhotoImg = loadedImages.sampleCouple;
-    setBgModeUI('transparent');
+    setBgModeUI('white');
     setBackdropUI('white');
   } else if (preset === 'ig-card') {
     state.mode = 'ig';
     activePhotoImg = loadedImages.sampleCouple;
-    setBgModeUI('transparent');
+    setBgModeUI('white');
     setBackdropUI('white');
   }
 
