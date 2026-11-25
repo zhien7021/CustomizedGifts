@@ -1013,7 +1013,7 @@
       const items = [];
       for (const poly of polygons) {
         const area = computeSignedArea(poly);
-        if (Math.abs(area) < 1e-3) continue;
+        if (Math.abs(area) < 0.02) continue;
         items.push({
           poly,
           area,
@@ -1479,8 +1479,31 @@
       return current;
     }
 
+    function segmentsIntersect(a, b, c, d) {
+      const ccw = (p1, p2, p3) => (p3.y - p1.y) * (p2.x - p1.x) > (p2.y - p1.y) * (p3.x - p1.x);
+      return ccw(a, c, d) !== ccw(b, c, d) && ccw(a, b, c) !== ccw(a, b, d);
+    }
+
+    function hasSelfIntersection(poly) {
+      const n = poly.length;
+      if (n < 4 || n > 600) return false;
+      for (let i = 0; i < n; i++) {
+        const a = poly[i];
+        const b = poly[(i + 1) % n];
+        for (let j = i + 2; j < n; j++) {
+          if (i === 0 && j === n - 1) continue;
+          const c = poly[j];
+          const d = poly[(j + 1) % n];
+          if (segmentsIntersect(a, b, c, d)) return true;
+        }
+      }
+      return false;
+    }
+
     function simplifyClosedPolygon(loop, toleranceMm, smoothIters = 2, smoothWeight = 0.32, preserveCorners = false) {
-      const smoothed = smoothClosedLoop(loop, smoothIters, smoothWeight, preserveCorners);
+      const smoothed = smoothIters > 0
+        ? smoothClosedLoop(loop, smoothIters, smoothWeight, preserveCorners)
+        : loop;
       if (smoothed.length < 6) return smoothed;
 
       // Split closed loop at two farthest points so RDP works cleanly on closed rings
@@ -1500,7 +1523,8 @@
       const half2 = simplifyRDP(smoothed.slice(splitIdx).concat([p0]), epsSq);
 
       const combined = half1.slice(0, half1.length - 1).concat(half2.slice(0, half2.length - 1));
-      return combined.length >= 3 ? combined : smoothed;
+      if (combined.length < 3) return smoothed;
+      return hasSelfIntersection(combined) ? loop : combined;
     }
 
     // =========================================================================
@@ -1656,7 +1680,7 @@
       // Extract clean, boolean-unioned, self-intersection-free 2D contours for the 3D Text Layer
       const rawTextLoops = marchingSquaresZeroContours(textScalarField, gridW, gridH, domainMinX, domainMinY, invRes);
       const simplifiedTextLoops = rawTextLoops.map(loop =>
-        simplifyClosedPolygon(loop, 0.02, 1, 0.22, true)
+        simplifyClosedPolygon(loop, 0.015, 0, 0, true)
       );
       const textShapeRecords = organizeContoursIntoShapes(simplifiedTextLoops);
 
