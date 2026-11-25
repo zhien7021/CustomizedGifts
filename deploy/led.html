@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FRC10114 客製透光點陣 LED 鑰匙圈</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+TC:wght@500;700;900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter"', '"Noto Sans TC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              bg: '#FFFFFF',
+              ink: '#111111',
+              accent: '#F97316',
+              accentHover: '#EA580C',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* 俐方體 11 號 (Cubic 11) 中文像素字體 */
+    @font-face {
+      font-family: 'Cubic11';
+      src: url('./Cubic_11.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    body {
+      background-color: #F4F5F7;
+      color: #111111;
+      -webkit-font-smoothing: antialiased;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: #2E323B;
+      border: 1px solid #4B5563;
+      border-radius: 999px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #F97316;
+      border: 2px solid #FFFFFF;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.14);
+    }
+    .cad-grid {
+      background-color: #FAFAFA;
+      background-image:
+        linear-gradient(to right, rgba(17, 17, 17, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(17, 17, 17, 0.06) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+    .studio-backdrop {
+      background: radial-gradient(circle at 50% 35%, #FFFFFF 0%, #EEF0F3 75%, #E2E5EA 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#F97316] selection:text-white bg-[#09090b]">
+
+  <!-- 主內容區 -->
+  <main class="flex-1 max-w-[1480px] w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- 左側：深色工程控制側欄 (4 欄) -->
+    <aside class="lg:col-span-4 space-y-5">
+
+      <!-- 區塊 1：文字與開源像素點陣字體引擎 -->
+      <section class="bg-[#181A1F] text-white border-2 border-[#111111] rounded-xl p-4 sm:p-5 shadow-[4px_4px_0px_#111111]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-black uppercase tracking-wider flex items-center gap-2 text-white">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#F97316]"></span>
+            1. 文字與點陣字體版本
+          </h2>
+          <span id="resBadge" class="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-[#262930] text-[#F97316] border border-neutral-700">5×7 經典英文</span>
+        </div>
+
+        <div class="space-y-4">
+          <!-- 文字輸入 -->
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="inputText" class="text-xs font-bold text-neutral-200">輸入英文 / 數字 / 繁體中文</label>
+              <span id="charCountLabel" class="text-[11px] font-mono text-neutral-400">9 字元</span>
+            </div>
+            <input id="inputText" type="text" value="FRC 10114" maxlength="24" placeholder="例如：FRC 10114 / 錦和創客"
+              class="w-full px-3.5 py-2.5 rounded-lg border border-neutral-600 font-bold text-base tracking-wider bg-[#23262E] text-white placeholder-neutral-500 focus:bg-[#2A2E38] focus:outline-none focus:border-[#F97316]" />
+          </div>
+
+          <!-- 快速範例切換鈕 -->
+          <div>
+            <span class="block text-[11px] font-bold text-neutral-400 mb-1.5">一鍵範例（自動切換對應版型）：</span>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" data-preset="FRC 10114" data-font="en5x7"
+                class="preset-btn px-2.5 py-1 text-xs font-mono font-bold rounded border border-neutral-600 bg-[#23262E] text-neutral-200 hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition cursor-pointer">FRC 10114</button>
+              <button type="button" data-preset="GAMEOVER" data-font="en5x7"
+                class="preset-btn px-2.5 py-1 text-xs font-mono font-bold rounded border border-neutral-600 bg-[#23262E] text-neutral-200 hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition cursor-pointer">GAMEOVER</button>
+              <button type="button" data-preset="錦和創客" data-font="cubic11"
+                class="preset-btn px-2.5 py-1 text-xs font-bold rounded border border-neutral-600 bg-[#23262E] text-neutral-200 hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition cursor-pointer">錦和創客</button>
+              <button type="button" data-preset="校慶紀念" data-font="cubic11"
+                class="preset-btn px-2.5 py-1 text-xs font-bold rounded border border-neutral-600 bg-[#23262E] text-neutral-200 hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition cursor-pointer">校慶紀念</button>
+            </div>
+          </div>
+
+          <!-- 內建點陣字體版本切換（英文版 5×7 / 中文版 Cubic 11） -->
+          <div class="pt-2 border-t border-neutral-700/80">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-neutral-200">選擇版型字體</span>
+              <span id="fontStatusTag" class="text-[10px] font-mono text-emerald-400">● 1:1 像素取樣就緒</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" data-font-btn="en5x7"
+                class="font-btn px-3 py-2.5 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-left text-white transition cursor-pointer">
+                <div class="font-mono text-xs font-black">英文版 (5×7)</div>
+                <div class="text-[10px] text-white/90">經典手刻 LED 英數</div>
+              </button>
+              <button type="button" data-font-btn="cubic11"
+                class="font-btn px-3 py-2.5 rounded-lg border border-neutral-600 bg-[#23262E] text-left text-neutral-200 hover:border-[#F97316] transition cursor-pointer">
+                <div class="font-mono text-xs font-black text-white">中文版 (Cubic 11)</div>
+                <div class="text-[10px] text-neutral-400">11×11 俐方體繁中像素</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 取樣閾值 (Threshold) 與中英混排對齊 -->
+          <div class="grid grid-cols-1 gap-3 pt-1">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="thresholdSlider" class="text-xs font-bold text-neutral-200">像素取樣閾值 (Threshold)</label>
+                <span id="thresholdVal" class="font-mono text-xs font-bold text-[#F97316]">128</span>
+              </div>
+              <input id="thresholdSlider" type="range" min="40" max="220" step="4" value="128" class="w-full" />
+            </div>
+          </div>
+
+          <!-- 留白排數、字距與中英垂直對齊 -->
+          <div class="grid grid-cols-4 gap-1.5 pt-2 border-t border-neutral-700/80">
+            <div>
+              <label for="marginY" class="block text-[10px] font-bold text-neutral-300 mb-1">上下留白</label>
+              <select id="marginY" class="w-full px-1.5 py-1.5 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316]">
+                <option value="0">0 格</option>
+                <option value="1" selected>1 格</option>
+                <option value="2">2 格</option>
+              </select>
+            </div>
+            <div>
+              <label for="marginX" class="block text-[10px] font-bold text-neutral-300 mb-1">左右留白</label>
+              <select id="marginX" class="w-full px-1.5 py-1.5 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316]">
+                <option value="1">1 格</option>
+                <option value="2" selected>2 格</option>
+                <option value="3">3 格</option>
+              </select>
+            </div>
+            <div>
+              <label for="letterSpacing" class="block text-[10px] font-bold text-neutral-300 mb-1">字元間距</label>
+              <select id="letterSpacing" class="w-full px-1.5 py-1.5 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316]">
+                <option value="1" selected>1 格</option>
+                <option value="2">2 格</option>
+                <option value="3">3 格</option>
+              </select>
+            </div>
+            <div>
+              <label for="vAlign" class="block text-[10px] font-bold text-neutral-300 mb-1">混排對齊</label>
+              <select id="vAlign" class="w-full px-1.5 py-1.5 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316]">
+                <option value="center" selected>置中</option>
+                <option value="bottom">靠底</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 區塊 2：雷射切割物理參數 (1:1 mm) -->
+      <section class="bg-[#181A1F] text-white border-2 border-[#111111] rounded-xl p-4 sm:p-5 shadow-[4px_4px_0px_#111111]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-black uppercase tracking-wider flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#F97316]"></span>
+            2. 雷射切割物理參數 (mm)
+          </h2>
+          <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-[#262930] text-neutral-300 border border-neutral-700">1:1 MM</span>
+        </div>
+
+        <div class="space-y-4">
+          <!-- 一鍵尺寸比例預設 -->
+          <div>
+            <span class="block text-[11px] font-bold text-neutral-400 mb-1.5">一鍵尺寸比例預設：</span>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" id="presetCompact"
+                class="px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] hover:border-[#F97316] text-left transition cursor-pointer">
+                <div class="text-xs font-black text-white">精巧鑰匙圈比例</div>
+                <div class="text-[10px] font-mono text-neutral-400">孔徑 0.9 / 孔距 1.3mm</div>
+              </button>
+              <button type="button" id="presetStandard"
+                class="px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] hover:border-[#F97316] text-left transition cursor-pointer">
+                <div class="text-xs font-black text-white">標準吊牌比例</div>
+                <div class="text-[10px] font-mono text-neutral-400">孔徑 1.2 / 孔距 1.8mm</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 燈珠圓孔直徑 -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="dotDia" class="text-xs font-bold text-neutral-200">燈珠圓孔直徑 (Diameter)</label>
+              <div class="flex items-center gap-1">
+                <input id="dotDiaNum" type="number" min="0.7" max="2.0" step="0.1" value="1.1"
+                  class="w-14 px-1.5 py-0.5 text-right font-mono text-xs font-bold border border-neutral-600 rounded bg-[#23262E] text-white" />
+                <span class="font-mono text-xs font-bold text-neutral-400">mm</span>
+              </div>
+            </div>
+            <input id="dotDia" type="range" min="0.7" max="2.0" step="0.1" value="1.1" class="w-full" />
+          </div>
+
+          <!-- 燈珠中心距 Pitch -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="dotPitch" class="text-xs font-bold text-neutral-200">燈珠中心距 (Pitch)</label>
+              <div class="flex items-center gap-1">
+                <input id="dotPitchNum" type="number" min="1.0" max="2.8" step="0.1" value="1.5"
+                  class="w-14 px-1.5 py-0.5 text-right font-mono text-xs font-bold border border-neutral-600 rounded bg-[#23262E] text-white" />
+                <span class="font-mono text-xs font-bold text-neutral-400">mm</span>
+              </div>
+            </div>
+            <input id="dotPitch" type="range" min="1.0" max="2.8" step="0.1" value="1.5" class="w-full" />
+
+            <!-- 孔壁安全間距即時提示 -->
+            <div id="wallSafetyBox" class="mt-2 px-2.5 py-1.5 rounded-lg border border-neutral-700 bg-[#23262E] text-[11px] flex items-center justify-between text-neutral-300">
+              <span>孔壁最小間距 (Pitch - Dia)：</span>
+              <span id="bridgeVal" class="font-mono font-black text-emerald-400">0.40 mm (安全)</span>
+            </div>
+          </div>
+
+          <!-- 外框導圓角 & 上下邊框厚度 -->
+          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-neutral-700/80">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="cornerRadius" class="text-xs font-bold text-neutral-200">外框導圓角</label>
+                <span id="cornerRadiusVal" class="font-mono text-xs font-bold text-[#F97316]">1.5 mm</span>
+              </div>
+              <input id="cornerRadius" type="range" min="0" max="4.0" step="0.5" value="1.5" class="w-full" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="framePadY" class="text-xs font-bold text-neutral-200">上下邊框留白</label>
+                <span id="framePadYVal" class="font-mono text-xs font-bold text-[#F97316]">2.2 mm</span>
+              </div>
+              <input id="framePadY" type="range" min="1.4" max="4.5" step="0.1" value="2.2" class="w-full" />
+            </div>
+          </div>
+
+          <!-- 左右螺絲鎖孔規格 & 左上吊孔 -->
+          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-neutral-700/80">
+            <div>
+              <label for="screwDia" class="block text-xs font-bold text-neutral-200 mb-1">兩側螺絲鎖孔規格</label>
+              <select id="screwDia" class="w-full px-2 py-2 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316]">
+                <option value="0">無螺絲孔 (純黏合)</option>
+                <option value="2.2" selected>M2 (Ø 2.2 mm)</option>
+                <option value="2.7">M2.5 (Ø 2.7 mm)</option>
+                <option value="3.2">M3 (Ø 3.2 mm)</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label for="keyringToggle" class="text-xs font-bold text-neutral-200">左上角吊孔</label>
+                <input id="keyringToggle" type="checkbox" checked class="w-4 h-4 accent-[#F97316] rounded cursor-pointer" />
+              </div>
+              <select id="keyringDia" class="w-full px-2 py-2 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316] disabled:opacity-40">
+                <option value="2.0">Ø 2.0 mm</option>
+                <option value="2.5" selected>Ø 2.5 mm</option>
+                <option value="3.0">Ø 3.0 mm</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 區塊 3：底層螢光色與光線視角模式 -->
+      <section class="bg-[#181A1F] text-white border-2 border-[#111111] rounded-xl p-4 sm:p-5 shadow-[4px_4px_0px_#111111]">
+        <h2 class="text-sm font-black uppercase tracking-wider flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#F97316]"></span>
+          3. 底層集光板材質與光影模擬
+        </h2>
+
+        <div class="space-y-4">
+          <div>
+            <span class="block text-xs font-bold text-neutral-200 mb-2">螢光集光壓克力底板顏色</span>
+            <div class="grid grid-cols-3 gap-1.5" id="colorPalette">
+              <button type="button" data-color="#FF2A4B" data-name="螢光紅"
+                class="color-btn flex items-center gap-1.5 px-2.5 py-2 rounded-lg border-2 border-[#F97316] bg-[#2B2F3A] text-white text-xs font-bold transition cursor-pointer">
+                <span class="w-3.5 h-3.5 rounded-full border border-white/60 shrink-0" style="background:#FF2A4B; box-shadow: 0 0 6px #FF2A4B;"></span>
+                <span>螢光紅</span>
+              </button>
+              <button type="button" data-color="#FFE600" data-name="螢光黃"
+                class="color-btn flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] text-neutral-200 hover:border-[#F97316] text-xs font-bold transition cursor-pointer">
+                <span class="w-3.5 h-3.5 rounded-full border border-neutral-400 shrink-0" style="background:#FFE600; box-shadow: 0 0 6px #FFE600;"></span>
+                <span>螢光黃</span>
+              </button>
+              <button type="button" data-color="#4ADE80" data-name="螢光綠"
+                class="color-btn flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] text-neutral-200 hover:border-[#F97316] text-xs font-bold transition cursor-pointer">
+                <span class="w-3.5 h-3.5 rounded-full border border-neutral-400 shrink-0" style="background:#4ADE80; box-shadow: 0 0 6px #4ADE80;"></span>
+                <span>螢光綠</span>
+              </button>
+              <button type="button" data-color="#F97316" data-name="螢光橘"
+                class="color-btn flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] text-neutral-200 hover:border-[#F97316] text-xs font-bold transition cursor-pointer">
+                <span class="w-3.5 h-3.5 rounded-full border border-neutral-400 shrink-0" style="background:#F97316; box-shadow: 0 0 6px #F97316;"></span>
+                <span>螢光橘</span>
+              </button>
+              <button type="button" data-color="#38BDF8" data-name="螢光藍"
+                class="color-btn col-span-2 flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] text-neutral-200 hover:border-[#F97316] text-xs font-bold transition cursor-pointer">
+                <span class="w-3.5 h-3.5 rounded-full border border-neutral-400 shrink-0" style="background:#38BDF8; box-shadow: 0 0 6px #38BDF8;"></span>
+                <span>螢光藍 (Ice Blue)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 光線模式切換 -->
+          <div>
+            <span class="block text-xs font-bold text-neutral-200 mb-2">模擬光線視角模式</span>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" id="modeLit"
+                class="mode-btn px-3 py-2.5 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                <span>✦ 集光透亮模式</span>
+              </button>
+              <button type="button" id="modeReflect"
+                class="mode-btn px-3 py-2.5 rounded-lg border border-neutral-600 bg-[#23262E] text-neutral-200 hover:border-[#F97316] text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+                <span>◈ 正面反光模式</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- 右側：淺色工作台主畫布 + 三層雷切圖檔 (8 欄) -->
+    <div class="lg:col-span-8 space-y-6">
+
+      <!-- 上半部：高擬真成品模擬預覽卡 -->
+      <section class="bg-white border-2 border-[#111111] rounded-xl overflow-hidden shadow-[4px_4px_0px_#111111]">
+        <!-- 標題與即時尺寸統計列 -->
+        <div class="px-4 sm:px-5 py-3 border-b-2 border-[#111111] bg-white flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-[#111111] text-white font-mono text-xs font-bold">INTERACTIVE PREVIEW</span>
+            <h2 class="text-sm sm:text-base font-black">三層疊合擬真預覽</h2>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+            <span class="px-2.5 py-1 rounded-md border-2 border-[#111111] bg-orange-50 text-[#111111] font-black">
+              預估實際尺寸：<span id="statDim" class="text-[#F97316]">86.2 × 23.5 mm</span>
+            </span>
+            <span class="px-2.5 py-1 rounded-md border border-[#111111] bg-red-50 text-red-700 font-bold">
+              切穿：<span id="statCut">142</span>
+            </span>
+            <span class="px-2.5 py-1 rounded-md border border-[#111111] bg-blue-50 text-blue-700 font-bold">
+              淺雕：<span id="statEngrave">272</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 互動工具列：手動修點提示、重置修改、縮放檢視 -->
+        <div class="px-4 sm:px-5 py-2 bg-neutral-50 border-b border-neutral-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 text-neutral-700">
+            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#F97316] text-white font-black text-[11px]">!</span>
+            <span><strong>互動修點：</strong>直接在下方畫布「點擊任意燈珠圓點」可切換切穿／淺雕，微調中文筆畫！</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="btnResetManual" type="button" disabled
+              class="px-2.5 py-1 rounded border border-[#111111] bg-white hover:bg-neutral-100 disabled:opacity-40 disabled:pointer-events-none font-bold text-[11px] transition cursor-pointer">
+              重置手動修改 (<span id="manualCountBadge">0</span>)
+            </button>
+            <div class="flex items-center border border-[#111111] rounded overflow-hidden bg-white">
+              <button id="btnZoomOut" type="button" title="縮小檢視" class="px-2 py-1 hover:bg-neutral-100 font-mono font-bold cursor-pointer">-</button>
+              <span id="zoomLabel" class="px-2 py-1 font-mono text-[11px] font-bold border-x border-neutral-300">100%</span>
+              <button id="btnZoomIn" type="button" title="放大檢視" class="px-2 py-1 hover:bg-neutral-100 font-mono font-bold cursor-pointer">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 擬真 Canvas 畫布區 -->
+        <div class="relative studio-backdrop w-full overflow-x-auto flex flex-col items-center justify-center p-4 sm:p-6">
+          <div id="canvasContainer" class="w-full max-w-full flex justify-center">
+            <canvas id="previewCanvas" class="block rounded-lg cursor-crosshair"></canvas>
+          </div>
+          <div class="mt-2 w-full flex flex-wrap items-center justify-between text-[11px] text-neutral-600 gap-2">
+            <span>結構：表層透明保護板 ＋ 中層消光黑遮光淺雕板 ＋ 底層螢光集光板</span>
+            <span class="font-mono">網格高度：<span id="statFontHeight">12 px</span> ｜ 總點陣：<span id="statGrid">48 × 14</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 下半部：3 層雷射切割 2D 平面圖檔預覽與匯出 -->
+      <section class="bg-white border-2 border-[#111111] rounded-xl p-4 sm:p-5 shadow-[4px_4px_0px_#111111]">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b-2 border-[#111111]">
+          <div>
+            <h2 class="text-base sm:text-lg font-black">3 層雷射切割 2D 平面圖檔（1:1 實際 mm SVG）</h2>
+            <p class="text-xs text-neutral-600 mt-0.5">
+              已內建真實物理毫米單位，可直接匯入 LightBurn、Illustrator、CorelDRAW 或 RDWorks 切割
+            </p>
+          </div>
+
+          <!-- 雷射標準色碼圖例 -->
+          <div class="flex flex-wrap items-center gap-3 text-xs font-bold bg-neutral-100 px-3 py-2 rounded-lg border border-[#111111]">
+            <span class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-sm bg-[#FF0000] border border-[#111111]"></span>
+              <span>#FF0000 切割 (Cut)</span>
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-sm bg-[#0000FF] border border-[#111111]"></span>
+              <span>#0000FF 表面淺雕 (Engrave)</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 三層獨立卡片列表 -->
+        <div class="space-y-4">
+
+          <!-- Layer 1 -->
+          <div class="border-2 border-[#111111] rounded-xl overflow-hidden bg-white">
+            <div class="px-4 py-2.5 bg-neutral-50 border-b border-[#111111] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-[#111111] text-white font-mono text-xs font-bold">LAYER 01</span>
+                <span class="text-sm font-black">表層：透明壓克力保護板</span>
+                <span class="hidden sm:inline text-xs text-neutral-500">（外框切割＋螺絲孔＋吊孔）</span>
+              </div>
+            </div>
+            <div id="svgPreview1" class="cad-grid p-4 flex items-center justify-center overflow-x-auto"></div>
+          </div>
+
+          <!-- Layer 2 -->
+          <div class="border-2 border-[#111111] rounded-xl overflow-hidden bg-white">
+            <div class="px-4 py-2.5 bg-neutral-50 border-b border-[#111111] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-[#F97316] text-white border border-[#111111] font-mono text-xs font-bold">LAYER 02</span>
+                <span class="text-sm font-black">中層：黑色遮光與淺雕板</span>
+                <!-- 淺雕路徑模式切換 -->
+                <select id="engraveStyle" title="選擇背景淺雕路徑模式"
+                  class="px-2 py-1 rounded border border-[#111111] bg-white text-xs font-bold text-[#111111] focus:outline-none focus:border-[#F97316]">
+                  <option value="outline" selected>淺雕：外框線雕圓</option>
+                  <option value="concentric">淺雕：同心圓雕刻（高質感）</option>
+                </select>
+              </div>
+            </div>
+            <div id="svgPreview2" class="cad-grid p-4 flex items-center justify-center overflow-x-auto"></div>
+          </div>
+
+          <!-- Layer 3 -->
+          <div class="border-2 border-[#111111] rounded-xl overflow-hidden bg-white">
+            <div class="px-4 py-2.5 bg-neutral-50 border-b border-[#111111] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-[#111111] text-white font-mono text-xs font-bold">LAYER 03</span>
+                <span class="text-sm font-black">底層：螢光集光壓克力板</span>
+                <span class="hidden sm:inline text-xs text-neutral-500">（外框切割＋螺絲孔＋吊孔）</span>
+              </div>
+            </div>
+            <div id="svgPreview3" class="cad-grid p-4 flex items-center justify-center overflow-x-auto"></div>
+          </div>
+
+        </div>
+
+        <!-- 底部雲端送出訂單列 -->
+        <div class="mt-5 pt-4 border-t-2 border-[#111111] bg-[#181A1F] text-white rounded-xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-sm font-black">📦 填寫資料並送出 LED 鑰匙圈</span>
+            <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-[#F97316]/20 text-[#F97316] border border-[#F97316]/40">三層合一 1:1 SVG · 直接傳送雲端</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="ledCustomerClass" class="block text-xs font-bold text-neutral-300 mb-1">班級（必填）</label>
+              <input id="ledCustomerClass" type="text" placeholder="例：302 / 資管二甲" maxlength="30"
+                class="w-full px-3 py-2 rounded-lg border border-neutral-600 bg-[#23262E] text-white text-sm focus:outline-none focus:border-[#F97316]" />
+            </div>
+            <div>
+              <label for="ledCustomerName" class="block text-xs font-bold text-neutral-300 mb-1">姓名（必填）</label>
+              <input id="ledCustomerName" type="text" placeholder="例：王小明" maxlength="30"
+                class="w-full px-3 py-2 rounded-lg border border-neutral-600 bg-[#23262E] text-white text-sm focus:outline-none focus:border-[#F97316]" />
+            </div>
+          </div>
+          <button id="btnLedUploadCloud" type="button"
+            class="w-full py-3 px-5 rounded-lg bg-[#F97316] hover:bg-[#EA580C] active:translate-y-0.5 text-white font-bold text-sm border-2 border-[#111111] shadow-[3px_3px_0px_#111111] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+            <span id="btnLedUploadText">🚀 確認送出 LED 鑰匙圈至雲端</span>
+          </button>
+          <div id="ledUploadStatus" class="hidden text-xs leading-relaxed px-3 py-2 rounded-lg border"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 非阻斷式提示訊息 Toast -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-200">
+    <div class="bg-[#111111] text-white px-4 py-3 rounded-xl border-2 border-[#F97316] shadow-lg flex items-center gap-2.5 text-xs sm:text-sm font-bold">
+      <span class="w-2.5 h-2.5 rounded-full bg-[#F97316]"></span>
+      <span id="toastMessage">已匯出 SVG 檔案</span>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * 5x7 經典工業 LED 點陣字型表（用於 5x7 經典英數模式）
+     */
+    const FONT_5X7 = {
+      'A': ['01110','10001','10001','11111','10001','10001','10001'],
+      'B': ['11110','10001','10001','11110','10001','10001','11110'],
+      'C': ['01110','10001','10000','10000','10000','10001','01110'],
+      'D': ['11100','10010','10001','10001','10001','10010','11100'],
+      'E': ['11111','10000','10000','11110','10000','10000','11111'],
+      'F': ['11111','10000','10000','11110','10000','10000','10000'],
+      'G': ['01110','10001','10000','10111','10001','10001','01111'],
+      'H': ['10001','10001','10001','11111','10001','10001','10001'],
+      'I': ['01110','00100','00100','00100','00100','00100','01110'],
+      'J': ['00111','00010','00010','00010','10010','10010','01100'],
+      'K': ['10001','10010','10100','11000','10100','10010','10001'],
+      'L': ['10000','10000','10000','10000','10000','10000','11111'],
+      'M': ['10001','11011','10101','10101','10001','10001','10001'],
+      'N': ['10001','11001','10101','10011','10001','10001','10001'],
+      'O': ['01110','10001','10001','10001','10001','10001','01110'],
+      'P': ['11110','10001','10001','11110','10000','10000','10000'],
+      'Q': ['01110','10001','10001','10001','10101','10010','01101'],
+      'R': ['11110','10001','10001','11110','10100','10010','10001'],
+      'S': ['01111','10000','10000','01110','00001','00001','11110'],
+      'T': ['11111','00100','00100','00100','00100','00100','00100'],
+      'U': ['10001','10001','10001','10001','10001','10001','01110'],
+      'V': ['10001','10001','10001','10001','10001','01010','00100'],
+      'W': ['10001','10001','10001','10101','10101','11011','10001'],
+      'X': ['10001','10001','01010','00100','01010','10001','10001'],
+      'Y': ['10001','10001','01010','00100','00100','00100','00100'],
+      'Z': ['11111','00001','00010','00100','01000','10000','11111'],
+      '0': ['01110','10001','10011','10101','11001','10001','01110'],
+      '1': ['00100','01100','00100','00100','00100','00100','01110'],
+      '2': ['01110','10001','00001','00110','01000','10000','11111'],
+      '3': ['11110','00001','00001','01110','00001','00001','11110'],
+      '4': ['00010','00110','01010','10010','11111','00010','00010'],
+      '5': ['11111','10000','11110','00001','00001','10001','01110'],
+      '6': ['01110','10000','10000','11110','10001','10001','01110'],
+      '7': ['11111','00001','00010','00100','01000','01000','01000'],
+      '8': ['01110','10001','10001','01110','10001','10001','01110'],
+      '9': ['01110','10001','10001','01111','00001','00001','01110'],
+      '!': ['00100','00100','00100','00100','00100','00000','00100'],
+      '?': ['01110','10001','00001','00110','00100','00000','00100'],
+      '.': ['00000','00000','00000','00000','00000','01100','01100'],
+      '-': ['00000','00000','00000','11111','00000','00000','00000'],
+      ':': ['00000','00100','00100','00000','00100','00100','00000'],
+      '/': ['00001','00010','00010','00100','01000','01000','10000'],
+      '+': ['00000','00100','00100','11111','00100','00100','00000'],
+      '*': ['00000','00100','10101','01110','10101','00100','00000'],
+      '<': ['00010','00100','01000','10000','01000','00100','00010'],
+      '>': ['01000','00100','00010','00001','00010','00100','01000'],
+      '_': ['00000','00000','00000','00000','00000','00000','11111'],
+      ' ': ['000','000','000','000','000','000','000']
+    };
+
+    /**
+     * 開源像素點陣字體預設規格表
+     */
+    const PIXEL_FONT_CONFIGS = {
+      en5x7: {
+        id: 'en5x7',
+        label: '5×7 經典英文',
+        height: 7,
+        fontFamily: '"Silkscreen", "Cubic11", sans-serif',
+        baselineRatio: 0.85
+      },
+      cubic11: {
+        id: 'cubic11',
+        label: '11×11 Cubic 11 中文',
+        height: 11,
+        fontFamily: '"Cubic11", "Noto Sans TC", sans-serif',
+        baselineRatio: 0.86
+      }
+    };
+
+    // 全域狀態管理
+    const state = {
+      text: 'FRC 10114',
+      fontPreset: 'en5x7', // 'en5x7' | 'cubic11'
+      threshold: 128,         // 40 ~ 220 (1:1 像素取樣明暗判定閾值)
+      marginY: 1,
+      marginX: 2,
+      letterSpacing: 1,
+      vAlign: 'center',       // 'center' | 'bottom' (中英混排垂直對齊)
+      dotDia: 1.1,
+      dotPitch: 1.5,
+      cornerRadius: 1.5,
+      framePadY: 2.2,
+      screwDia: 2.2,          // 0 = 無螺絲孔, 2.2 = M2, 2.7 = M2.5, 3.2 = M3
+      keyringEnabled: true,
+      keyringDia: 2.5,
+      accentColor: '#FF2A4B',
+      accentName: '螢光紅',
+      previewMode: 'lit',     // 'lit' | 'reflect'
+      engraveStyle: 'outline', // 'outline' | 'concentric'
+      zoom: 1.0,
+      manualOverrides: new Map()
+    };
+
+    // 離屏畫布（專用於 1:1 無抗鋸齒像素取樣）
+    const offscreenCanvas = document.createElement('canvas');
+    const offscreenCtx = offscreenCanvas.getContext('2d', { willReadFrequently: true });
+
+    // 快取目前幾何與畫布座標供互動點擊偵測使用
+    let currentGeo = null;
+    let lastRenderMetrics = null;
+    let hoverDotKey = null;
+    let toastTimer = null;
+
+    /**
+     * 顯示底部非阻斷式提示訊息 Toast
+     */
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const label = document.getElementById('toastMessage');
+      if (!box || !label) return;
+      label.textContent = msg;
+      box.classList.remove('opacity-0', 'translate-y-2');
+      box.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        box.classList.remove('opacity-100', 'translate-y-0');
+        box.classList.add('opacity-0', 'translate-y-2');
+      }, 2400);
+    }
+
+    /**
+     * 判斷字元是否為全形/中日韓寬字元
+     */
+    function isWideChar(ch) {
+      const code = ch.codePointAt(0) || 0;
+      return (
+        (code >= 0x2E80 && code <= 0x9FFF) ||
+        (code >= 0xAC00 && code <= 0xD7AF) ||
+        (code >= 0xF900 && code <= 0xFAFF) ||
+        (code >= 0xFF01 && code <= 0xFF60)
+      );
+    }
+
+    /**
+     * 無抗鋸齒 1:1 像素取樣引擎 (Pixel-Perfect Sampling)
+     * 以目標整數像素高度 (8px / 10px / 12px / 16px) 1:1 繪製開源點陣字體，並直接取樣每個網格中心點
+     */
+    function rasterizeGlyphToMatrix(ch, fontCfg, threshold) {
+      const targetH = fontCfg.height;
+      if (ch === ' ') {
+        const spaceW = Math.max(3, Math.round(targetH * 0.42));
+        return Array.from({ length: targetH }, () => Array(spaceW).fill(false));
+      }
+
+      const wide = isWideChar(ch);
+      // 保留額外左右掃描緩衝，確保比例字寬 (Proportional Pixel Font) 完整不裁邊
+      const scanW = wide ? targetH + 4 : Math.max(8, targetH + 2);
+
+      offscreenCanvas.width = scanW;
+      offscreenCanvas.height = targetH;
+
+      // 徹底關閉抗鋸齒，實現 1:1 原生像素網格對齊
+      offscreenCtx.imageSmoothingEnabled = false;
+      offscreenCtx.clearRect(0, 0, scanW, targetH);
+      offscreenCtx.fillStyle = '#FFFFFF';
+      offscreenCtx.fillRect(0, 0, scanW, targetH);
+
+      // 以字體原生整數像素大小繪製
+      offscreenCtx.font = `400 ${targetH}px ${fontCfg.fontFamily}`;
+      offscreenCtx.fillStyle = '#000000';
+      offscreenCtx.textAlign = 'center';
+      offscreenCtx.textBaseline = 'alphabetic';
+
+      const baselineY = Math.round(targetH * fontCfg.baselineRatio);
+      offscreenCtx.fillText(ch, Math.floor(scanW / 2), baselineY);
+
+      const imgData = offscreenCtx.getImageData(0, 0, scanW, targetH).data;
+      const rawCols = [];
+      for (let c = 0; c < scanW; c++) {
+        const colBits = [];
+        for (let r = 0; r < targetH; r++) {
+          const idx = (r * scanW + c) * 4;
+          const lum = 0.299 * imgData[idx] + 0.587 * imgData[idx + 1] + 0.114 * imgData[idx + 2];
+          // 直接取樣每個網格中心點亮度並與 Threshold 比對
+          colBits.push(lum < (255 - threshold));
+        }
+        rawCols.push(colBits);
+      }
+
+      // 裁切左右全空欄位，讓全形中文字與半形英數字緊湊排列
+      let firstNonEmpty = 0;
+      let lastNonEmpty = scanW - 1;
+      while (firstNonEmpty < scanW && !rawCols[firstNonEmpty].some(Boolean)) firstNonEmpty++;
+      while (lastNonEmpty > firstNonEmpty && !rawCols[lastNonEmpty].some(Boolean)) lastNonEmpty--;
+
+      let trimmedCols;
+      if (firstNonEmpty <= lastNonEmpty) {
+        trimmedCols = rawCols.slice(firstNonEmpty, lastNonEmpty + 1);
+      } else {
+        const fallbackW = wide ? targetH : Math.max(4, Math.round(targetH * 0.5));
+        trimmedCols = Array.from({ length: fallbackW }, () => Array(targetH).fill(false));
+      }
+
+      // 轉置為 [row][col] 矩陣
+      const matrix = Array.from({ length: targetH }, (_, r) => trimmedCols.map(col => col[r]));
+
+      // 垂直對齊微調：確保單一字元在目標網格高度內依「置中」或「靠底」對齊
+      let topRow = 0;
+      let bottomRow = targetH - 1;
+      while (topRow < targetH && !matrix[topRow].some(Boolean)) topRow++;
+      while (bottomRow > topRow && !matrix[bottomRow].some(Boolean)) bottomRow--;
+
+      if (topRow <= bottomRow) {
+        const glyphH = bottomRow - topRow + 1;
+        const slack = targetH - glyphH;
+        let desiredTop = topRow;
+        if (state.vAlign === 'center') {
+          desiredTop = Math.floor(slack / 2);
+        } else if (state.vAlign === 'bottom') {
+          desiredTop = Math.max(0, slack - (targetH >= 12 ? 1 : 0));
+        }
+
+        const shiftY = desiredTop - topRow;
+        if (shiftY !== 0) {
+          const shifted = Array.from({ length: targetH }, () => Array(trimmedCols.length).fill(false));
+          for (let r = topRow; r <= bottomRow; r++) {
+            const nr = r + shiftY;
+            if (nr >= 0 && nr < targetH) {
+              shifted[nr] = [...matrix[r]];
+            }
+          }
+          return shifted;
+        }
+      }
+
+      return matrix;
+    }
+
+    /**
+     * 將輸入文字轉換為二維點陣布林矩陣（結合開源像素字體取樣與使用者手動點擊覆寫）
+     */
+    function buildDotMatrix() {
+      const rawStr = state.text || ' ';
+      const chars = Array.from(rawStr);
+      const validChars = chars.length > 0 ? chars : [' '];
+      const fontCfg = PIXEL_FONT_CONFIGS[state.fontPreset] || PIXEL_FONT_CONFIGS.en5x7;
+      const resH = fontCfg.height;
+
+      const textRows = Array.from({ length: resH }, () => []);
+
+      validChars.forEach((ch, idx) => {
+        let glyphMatrix;
+        const upperCh = ch.toUpperCase();
+
+        // 經典 5x7 英數模式下，支援的 ASCII 字元優先使用手刻 5x7 復古 LED 字庫
+        if (state.fontPreset === 'en5x7' && FONT_5X7[upperCh] !== undefined) {
+          glyphMatrix = FONT_5X7[upperCh].map(rowStr => rowStr.split('').map(bit => bit === '1'));
+        } else {
+          glyphMatrix = rasterizeGlyphToMatrix(ch, fontCfg, state.threshold);
+        }
+
+        const glyphW = glyphMatrix[0].length;
+        for (let r = 0; r < resH; r++) {
+          for (let c = 0; c < glyphW; c++) {
+            textRows[r].push(glyphMatrix[r][c]);
+          }
+        }
+
+        // 字元間距 (1~3 格)
+        if (idx < validChars.length - 1) {
+          for (let r = 0; r < resH; r++) {
+            for (let s = 0; s < state.letterSpacing; s++) {
+              textRows[r].push(false);
+            }
+          }
+        }
+      });
+
+      const innerCols = textRows[0].length;
+      const totalCols = state.marginX * 2 + innerCols;
+      const totalRows = state.marginY * 2 + resH;
+
+      const grid = [];
+      for (let r = 0; r < state.marginY; r++) {
+        grid.push(Array(totalCols).fill(false));
+      }
+      for (let r = 0; r < resH; r++) {
+        grid.push([
+          ...Array(state.marginX).fill(false),
+          ...textRows[r],
+          ...Array(state.marginX).fill(false)
+        ]);
+      }
+      for (let r = 0; r < state.marginY; r++) {
+        grid.push(Array(totalCols).fill(false));
+      }
+
+      // 套用使用者在預覽畫布上手動點擊修改的點陣狀態
+      state.manualOverrides.forEach((overrideVal, key) => {
+        const [rStr, cStr] = key.split(',');
+        const r = parseInt(rStr, 10);
+        const c = parseInt(cStr, 10);
+        if (r >= 0 && r < totalRows && c >= 0 && c < totalCols) {
+          grid[r][c] = overrideVal;
+        }
+      });
+
+      return { grid, totalRows, totalCols, charCount: chars.length };
+    }
+
+    /**
+     * 計算精確的 1:1 物理尺寸座標（單位：mm）
+     */
+    function computeGeometry() {
+      const { grid, totalRows, totalCols, charCount } = buildDotMatrix();
+      const { dotDia, dotPitch, cornerRadius, framePadY, screwDia, keyringEnabled, keyringDia } = state;
+
+      const matrixSpanW = (totalCols - 1) * dotPitch;
+      const matrixSpanH = (totalRows - 1) * dotPitch;
+
+      // 成品總高度 H (mm)
+      const H = +(matrixSpanH + dotDia + 2 * framePadY).toFixed(2);
+      const hasScrews = screwDia > 0;
+
+      // 左上角鑰匙圈吊孔中心座標
+      const kx = +(Math.max(2.5, keyringDia / 2 + 1.4)).toFixed(2);
+      const ky = +(Math.max(2.5, keyringDia / 2 + 1.4)).toFixed(2);
+
+      let sxLeft = 0;
+      let sxRight = 0;
+      const sy = +(H / 2).toFixed(2);
+      let firstDotX = 0;
+      let W = 0;
+
+      if (hasScrews) {
+        // 有兩側螺絲孔時，自動計算兩側耳翼寬度
+        const minEarX = Math.max(screwDia / 2 + 2.3, keyringEnabled ? kx + 1.6 : screwDia / 2 + 2.3);
+        sxLeft = +minEarX.toFixed(2);
+        const screwToDotGap = screwDia / 2 + dotDia / 2 + 2.1;
+        firstDotX = +(sxLeft + screwToDotGap).toFixed(2);
+        const lastDotX = firstDotX + matrixSpanW;
+        sxRight = +(lastDotX + screwToDotGap).toFixed(2);
+        W = +(sxRight + sxLeft).toFixed(2);
+      } else {
+        // 無螺絲孔（純壓克力氯仿／UV膠黏合模式）
+        const sidePad = Math.max(2.4, keyringEnabled ? kx + keyringDia / 2 + 1.4 : 2.4);
+        firstDotX = +(sidePad + dotDia / 2).toFixed(2);
+        const lastDotX = firstDotX + matrixSpanW;
+        W = +(lastDotX + dotDia / 2 + sidePad).toFixed(2);
+      }
+
+      const firstDotY = +(framePadY + dotDia / 2).toFixed(2);
+
+      let cutCount = 0;
+      let engraveCount = 0;
+      const dots = [];
+
+      for (let r = 0; r < totalRows; r++) {
+        for (let c = 0; c < totalCols; c++) {
+          const isLit = grid[r][c];
+          if (isLit) cutCount++;
+          else engraveCount++;
+          dots.push({
+            r,
+            c,
+            key: `${r},${c}`,
+            x: +(firstDotX + c * dotPitch).toFixed(3),
+            y: +(firstDotY + r * dotPitch).toFixed(3),
+            isLit,
+            isManual: state.manualOverrides.has(`${r},${c}`)
+          });
+        }
+      }
+
+      return {
+        W,
+        H,
+        cornerRadius: Math.min(cornerRadius, H / 2, W / 2),
+        totalRows,
+        totalCols,
+        charCount,
+        dotDia,
+        dotPitch,
+        hasScrews,
+        screwDia,
+        sxLeft,
+        sxRight,
+        sy,
+        keyringEnabled,
+        keyringDia,
+        kx,
+        ky,
+        dots,
+        cutCount,
+        engraveCount
+      };
+    }
+
+    /**
+     * 繪製圓角矩形路徑輔助函式
+     */
+    function roundRectPath(ctx, x, y, w, h, r) {
+      const radius = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + w - radius, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+      ctx.lineTo(x + w, y + h - radius);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+      ctx.lineTo(x + radius, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    /**
+     * 十六進位色碼轉 RGBA
+     */
+    function hexToRgba(hex, alpha) {
+      const clean = hex.replace('#', '');
+      const num = parseInt(clean, 16);
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    /**
+     * 繪製高擬真三層疊合預覽 Canvas（支援縮放檢視與滑鼠互動懸停提示）
+     */
+    function renderRealisticPreview(geo) {
+      const canvas = document.getElementById('previewCanvas');
+      const container = document.getElementById('canvasContainer');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+
+      const containerW = container.clientWidth || 760;
+      const padX = Math.max(24, containerW * 0.05);
+      const availW = Math.max(260, containerW - padX * 2);
+      const baseScale = Math.min(availW / geo.W, 11.0);
+      const scale = baseScale * state.zoom;
+
+      const bodyW = geo.W * scale;
+      const bodyH = geo.H * scale;
+      const padTop = Math.max(32, scale * 3.5);
+      const padBottom = Math.max(48, scale * 5.0);
+
+      const logicalW = Math.max(containerW, bodyW + padX * 2);
+      const logicalH = bodyH + padTop + padBottom;
+
+      canvas.width = Math.round(logicalW * dpr);
+      canvas.height = Math.round(logicalH * dpr);
+      canvas.style.width = `${Math.round(logicalW)}px`;
+      canvas.style.height = `${Math.round(logicalH)}px`;
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, logicalW, logicalH);
+
+      const ox = (logicalW - bodyW) / 2;
+      const oy = padTop;
+
+      // 儲存座標轉換參數供滑鼠點擊/懸停偵測使用
+      lastRenderMetrics = { ox, oy, scale, logicalW, logicalH };
+
+      const rPx = geo.cornerRadius * scale;
+      const isLitMode = state.previewMode === 'lit';
+      const glowColor = state.accentColor;
+
+      // 1. 桌面投影與螢光底板色光折射
+      ctx.save();
+      if (isLitMode) {
+        ctx.shadowColor = hexToRgba(glowColor, 0.55);
+        ctx.shadowBlur = 28;
+        ctx.shadowOffsetY = 16;
+        roundRectPath(ctx, ox + 4, oy + 6, bodyW - 8, bodyH, rPx);
+        ctx.fillStyle = hexToRgba(glowColor, 0.35);
+        ctx.fill();
+
+        ctx.shadowBlur = 14;
+        ctx.shadowOffsetY = 24;
+        ctx.fillStyle = hexToRgba(glowColor, 0.45);
+        ctx.fillRect(ox + bodyW * 0.12, oy + bodyH + 10, bodyW * 0.76, 6);
+      } else {
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.28)';
+        ctx.shadowBlur = 22;
+        ctx.shadowOffsetY = 14;
+        roundRectPath(ctx, ox + 2, oy + 4, bodyW - 4, bodyH, rPx);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.fill();
+
+        ctx.shadowColor = hexToRgba(glowColor, 0.45);
+        ctx.shadowBlur = 16;
+        ctx.shadowOffsetY = 18;
+        ctx.fillStyle = hexToRgba(glowColor, 0.55);
+        ctx.fillRect(ox + 6, oy + bodyH + 6, bodyW - 12, 5);
+      }
+      ctx.restore();
+
+      // 2. 左上角金屬鑰匙圈雙圈環
+      if (geo.keyringEnabled) {
+        const kcx = ox + geo.kx * scale;
+        const kcy = oy + geo.ky * scale;
+        ctx.save();
+        ctx.translate(kcx, kcy);
+        ctx.rotate(-0.65);
+
+        ctx.beginPath();
+        ctx.ellipse(-scale * 2.1, 2, scale * 2.3, scale * 1.45, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0,0,0,0.22)';
+        ctx.lineWidth = Math.max(2, scale * 0.36);
+        ctx.stroke();
+
+        const ringGrad = ctx.createLinearGradient(-scale * 4.2, -scale * 1.5, 0, scale * 1.5);
+        ringGrad.addColorStop(0, '#D4D8DF');
+        ringGrad.addColorStop(0.35, '#FFFFFF');
+        ringGrad.addColorStop(0.7, '#7D838E');
+        ringGrad.addColorStop(1, '#AEB4BE');
+
+        ctx.beginPath();
+        ctx.ellipse(-scale * 2.1, 0, scale * 2.3, scale * 1.45, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = ringGrad;
+        ctx.lineWidth = Math.max(2.2, scale * 0.36);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.ellipse(-scale * 2.0, 0.6, scale * 2.15, scale * 1.3, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = '#555A64';
+        ctx.lineWidth = Math.max(1, scale * 0.14);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 3. 底層：3mm 螢光壓克力集光板厚度側邊
+      const slabOffset = Math.max(4, scale * 0.6);
+      ctx.save();
+      roundRectPath(ctx, ox, oy + slabOffset, bodyW, bodyH, rPx);
+      const bottomGrad = ctx.createLinearGradient(ox, oy + slabOffset, ox, oy + slabOffset + bodyH);
+      bottomGrad.addColorStop(0, glowColor);
+      bottomGrad.addColorStop(0.75, glowColor);
+      bottomGrad.addColorStop(1, '#FFFFFF');
+      ctx.fillStyle = bottomGrad;
+      ctx.fill();
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = hexToRgba(glowColor, 0.9);
+      ctx.stroke();
+
+      roundRectPath(ctx, ox + 1.5, oy + bodyH + slabOffset * 0.35, bodyW - 3, slabOffset * 0.65, rPx * 0.5);
+      ctx.fillStyle = hexToRgba('#FFFFFF', 0.45);
+      ctx.fill();
+      ctx.restore();
+
+      // 4. 中層：2mm 消光黑壓克力遮光板
+      ctx.save();
+      roundRectPath(ctx, ox, oy, bodyW, bodyH, rPx);
+      const blackGrad = ctx.createLinearGradient(ox, oy, ox, oy + bodyH);
+      if (isLitMode) {
+        blackGrad.addColorStop(0, '#121316');
+        blackGrad.addColorStop(1, '#090A0C');
+      } else {
+        blackGrad.addColorStop(0, '#23262B');
+        blackGrad.addColorStop(1, '#16181C');
+      }
+      ctx.fillStyle = blackGrad;
+      ctx.fill();
+
+      // 繪製所有點陣圓孔
+      const dotR = (geo.dotDia / 2) * scale;
+      geo.dots.forEach(d => {
+        const cx = ox + d.x * scale;
+        const cy = oy + d.y * scale;
+
+        if (d.isLit) {
+          if (isLitMode) {
+            ctx.save();
+            ctx.shadowColor = glowColor;
+            ctx.shadowBlur = Math.max(5, dotR * 2.1);
+            ctx.beginPath();
+            ctx.arc(cx, cy, dotR, 0, Math.PI * 2);
+            ctx.fillStyle = glowColor;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, dotR * 0.58, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+            ctx.fill();
+            ctx.restore();
+          } else {
+            ctx.beginPath();
+            ctx.arc(cx, cy, dotR, 0, Math.PI * 2);
+            ctx.fillStyle = '#0B0C0E';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy + dotR * 0.15, dotR * 0.72, 0, Math.PI * 2);
+            ctx.fillStyle = hexToRgba(glowColor, 0.28);
+            ctx.fill();
+
+            ctx.lineWidth = Math.max(0.7, scale * 0.08);
+            ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+            ctx.stroke();
+          }
+        } else {
+          // 未亮燈背景點陣：雷射表面淺雕霧灰色凹點
+          ctx.beginPath();
+          ctx.arc(cx, cy, dotR * 0.96, 0, Math.PI * 2);
+          ctx.fillStyle = isLitMode ? '#2A2D33' : '#575B63';
+          ctx.fill();
+
+          ctx.lineWidth = Math.max(0.6, scale * 0.09);
+          ctx.strokeStyle = isLitMode ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.28)';
+          ctx.stroke();
+
+          // 若選擇同心圓雕刻，在預覽中也呈現微細內環層次
+          if (state.engraveStyle === 'concentric' && dotR > 3) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, dotR * 0.52, 0, Math.PI * 2);
+            ctx.strokeStyle = isLitMode ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.32)';
+            ctx.stroke();
+          }
+        }
+
+        // 滑鼠懸停互動高亮外圈
+        if (hoverDotKey === d.key) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, dotR * 1.32, 0, Math.PI * 2);
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = 1.6;
+          ctx.stroke();
+          ctx.restore();
+        }
+      });
+      ctx.restore();
+
+      // 5. 表層：2mm 透明壓克力保護板（斜向玻璃高光與導角折射）
+      ctx.save();
+      roundRectPath(ctx, ox, oy, bodyW, bodyH, rPx);
+      ctx.clip();
+
+      const glareGrad = ctx.createLinearGradient(ox, oy, ox + bodyW * 0.65, oy + bodyH);
+      if (isLitMode) {
+        glareGrad.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+        glareGrad.addColorStop(0.32, 'rgba(255, 255, 255, 0.04)');
+        glareGrad.addColorStop(0.34, 'rgba(255, 255, 255, 0.0)');
+        glareGrad.addColorStop(1, 'rgba(255, 255, 255, 0.03)');
+      } else {
+        glareGrad.addColorStop(0, 'rgba(255, 255, 255, 0.42)');
+        glareGrad.addColorStop(0.26, 'rgba(255, 255, 255, 0.16)');
+        glareGrad.addColorStop(0.27, 'rgba(255, 255, 255, 0.03)');
+        glareGrad.addColorStop(0.75, 'rgba(255, 255, 255, 0.06)');
+        glareGrad.addColorStop(1, 'rgba(255, 255, 255, 0.22)');
+      }
+      ctx.fillStyle = glareGrad;
+      ctx.fillRect(ox, oy, bodyW, bodyH);
+
+      roundRectPath(ctx, ox + 1, oy + 1, bodyW - 2, bodyH - 2, Math.max(0, rPx - 1));
+      ctx.lineWidth = Math.max(1.5, scale * 0.22);
+      ctx.strokeStyle = isLitMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(210, 245, 240, 0.55)';
+      ctx.stroke();
+      ctx.restore();
+
+      roundRectPath(ctx, ox, oy, bodyW, bodyH, rPx);
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = 'rgba(17, 17, 17, 0.75)';
+      ctx.stroke();
+
+      // 6. 左上角吊孔穿孔細節
+      if (geo.keyringEnabled) {
+        const kcx = ox + geo.kx * scale;
+        const kcy = oy + geo.ky * scale;
+        const kr = (geo.keyringDia / 2) * scale;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(kcx, kcy, kr, 0, Math.PI * 2);
+        ctx.fillStyle = '#ECEEF2';
+        ctx.fill();
+        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = '#333333';
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 7. 左右兩端擬真不鏽鋼十字螺絲頭
+      if (geo.hasScrews) {
+        const drawScrew = (sx, sy) => {
+          const headR = (geo.screwDia / 2) * scale * 1.48;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(sx, sy + 1.5, headR, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(0,0,0,0.45)';
+          ctx.fill();
+
+          const metalGrad = ctx.createRadialGradient(sx - headR * 0.3, sy - headR * 0.3, headR * 0.1, sx, sy, headR);
+          metalGrad.addColorStop(0, '#F3F4F6');
+          metalGrad.addColorStop(0.55, '#9CA3AF');
+          metalGrad.addColorStop(1, '#4B5563');
+
+          ctx.beginPath();
+          ctx.arc(sx, sy, headR, 0, Math.PI * 2);
+          ctx.fillStyle = metalGrad;
+          ctx.fill();
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = '#1F2937';
+          ctx.stroke();
+
+          const slotLen = headR * 0.56;
+          ctx.strokeStyle = '#272A30';
+          ctx.lineWidth = Math.max(1.4, headR * 0.24);
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(sx - slotLen, sy);
+          ctx.lineTo(sx + slotLen, sy);
+          ctx.moveTo(sx, sy - slotLen);
+          ctx.lineTo(sx, sy + slotLen);
+          ctx.stroke();
+          ctx.restore();
+        };
+
+        drawScrew(ox + geo.sxLeft * scale, oy + geo.sy * scale);
+        drawScrew(ox + geo.sxRight * scale, oy + geo.sy * scale);
+      }
+    }
+
+    /**
+     * 產生單一層或三層合一的 1:1 實際 mm 尺寸 SVG 字串
+     */
+    function generateLayerSVG(geo, layer, forExport = false) {
+      const cutColor = '#FF0000';
+      const engraveColor = '#0000FF';
+      const strokeW = forExport ? '0.05' : '0.15';
+
+      const buildSingleLayerElements = (layerNum, offsetY = 0) => {
+        const parts = [];
+        const rScrew = +(geo.screwDia / 2).toFixed(3);
+        const rKeyring = +(geo.keyringDia / 2).toFixed(3);
+        const rDot = +(geo.dotDia / 2).toFixed(3);
+        const rInnerDot = +(rDot * 0.52).toFixed(3);
+
+        parts.push(`<g id="Layer_${layerNum}" transform="translate(0, ${offsetY})">`);
+        // 外框切割 (Cut - Red)
+        parts.push(
+          `  <rect x="0" y="0" width="${geo.W}" height="${geo.H}" rx="${geo.cornerRadius}" ry="${geo.cornerRadius}" fill="none" stroke="${cutColor}" stroke-width="${strokeW}" />`
+        );
+        // 兩側螺絲孔 (Cut - Red)
+        if (geo.hasScrews) {
+          parts.push(
+            `  <circle cx="${geo.sxLeft}" cy="${geo.sy}" r="${rScrew}" fill="none" stroke="${cutColor}" stroke-width="${strokeW}" />`
+          );
+          parts.push(
+            `  <circle cx="${geo.sxRight}" cy="${geo.sy}" r="${rScrew}" fill="none" stroke="${cutColor}" stroke-width="${strokeW}" />`
+          );
+        }
+        // 左上角鑰匙圈吊孔 (Cut - Red)
+        if (geo.keyringEnabled) {
+          parts.push(
+            `  <circle cx="${geo.kx}" cy="${geo.ky}" r="${rKeyring}" fill="none" stroke="${cutColor}" stroke-width="${strokeW}" />`
+          );
+        }
+
+        // Layer 2 專屬：發光文字切穿圓孔 (Red) 與背景表面淺雕圓點 (Blue)
+        if (layerNum === 2) {
+          const cutDots = [];
+          const engraveDots = [];
+          geo.dots.forEach(d => {
+            if (d.isLit) {
+              cutDots.push(`    <circle cx="${d.x}" cy="${d.y}" r="${rDot}" />`);
+            } else {
+              engraveDots.push(`    <circle cx="${d.x}" cy="${d.y}" r="${rDot}" />`);
+              if (state.engraveStyle === 'concentric') {
+                engraveDots.push(`    <circle cx="${d.x}" cy="${d.y}" r="${rInnerDot}" />`);
+              }
+            }
+          });
+
+          if (cutDots.length > 0) {
+            parts.push(`  <g id="Layer2_Cut_Dots" fill="none" stroke="${cutColor}" stroke-width="${strokeW}">`);
+            parts.push(...cutDots);
+            parts.push(`  </g>`);
+          }
+          if (engraveDots.length > 0) {
+            parts.push(`  <g id="Layer2_Engrave_Dots" fill="none" stroke="${engraveColor}" stroke-width="${strokeW}">`);
+            parts.push(...engraveDots);
+            parts.push(`  </g>`);
+          }
+        }
+
+        parts.push(`</g>`);
+        return parts.join('\n');
+      };
+
+      if (layer === 'all') {
+        const gap = 8; // 三層之間保留 8mm 排版間距（含圖層標註空間）
+        const topLabelMargin = 6;
+        const totalW = +(Math.max(geo.W, 65)).toFixed(2);
+        const totalH = +(topLabelMargin + geo.H * 3 + gap * 2 + 2).toFixed(2);
+
+        const y1 = topLabelMargin;
+        const y2 = +(topLabelMargin + geo.H + gap).toFixed(2);
+        const y3 = +(topLabelMargin + (geo.H + gap) * 2).toFixed(2);
+
+        const l1 = buildSingleLayerElements(1, y1);
+        const l2 = buildSingleLayerElements(2, y2);
+        const l3 = buildSingleLayerElements(3, y3);
+
+        // 圖層標註文字（使用 #0000FF 淺雕色標記在各層上方，方便雷切識別）
+        const labels = [
+          `<g id="Layer_Labels" fill="#0000FF" font-family="sans-serif" font-size="2.6">`,
+          `  <text x="0" y="${+(y1 - 1.5).toFixed(2)}">LAYER 1: 表層透明保護板 (${geo.W}x${geo.H}mm) - 紅線切割</text>`,
+          `  <text x="0" y="${+(y2 - 1.5).toFixed(2)}">LAYER 2: 中層黑色遮光板 (${geo.W}x${geo.H}mm) - 紅線切穿 / 藍線淺雕</text>`,
+          `  <text x="0" y="${+(y3 - 1.5).toFixed(2)}">LAYER 3: 底層螢光集光板 (${geo.W}x${geo.H}mm) - 紅線切割</text>`,
+          `</g>`
+        ].join('\n');
+
+        return [
+          `<?xml version="1.0" encoding="UTF-8"?>`,
+          `<!-- 中英文通用・透光點陣 LED 鑰匙圈 3 層雷射切割圖檔 | 單片尺寸: ${geo.W}mm x ${geo.H}mm | 紅線 #FF0000 = 切割 Cut, 藍線 #0000FF = 淺雕 Engrave -->`,
+          `<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}mm" height="${totalH}mm" viewBox="0 0 ${totalW} ${totalH}">`,
+          labels,
+          l1,
+          l2,
+          l3,
+          `</svg>`
+        ].join('\n');
+      } else {
+        const content = buildSingleLayerElements(Number(layer), 0);
+        if (forExport) {
+          return [
+            `<?xml version="1.0" encoding="UTF-8"?>`,
+            `<!-- 透光點陣 LED 鑰匙圈 Layer ${layer} | 尺寸: ${geo.W}mm x ${geo.H}mm | 紅線 #FF0000 = 切割 Cut, 藍線 #0000FF = 淺雕 Engrave -->`,
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${geo.W}mm" height="${geo.H}mm" viewBox="0 0 ${geo.W} ${geo.H}">`,
+            content,
+            `</svg>`
+          ].join('\n');
+        } else {
+          const pad = 1.2;
+          const vbX = -pad;
+          const vbY = -pad;
+          const vbW = +(geo.W + pad * 2).toFixed(2);
+          const vbH = +(geo.H + pad * 2).toFixed(2);
+          return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vbX} ${vbY} ${vbW} ${vbH}" class="w-full max-w-[700px] h-auto max-h-[175px] block">${content}</svg>`;
+        }
+      }
+    }
+
+    /**
+     * 觸發瀏覽器下載 SVG 檔案
+     */
+    function downloadSVGFile(svgContent, filename) {
+      const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast(`已下載：${filename}`);
+    }
+
+    /**
+     * 產生安全檔名前綴（支援中英文與數字）
+     */
+    function getSafeFilePrefix() {
+      const clean = (state.text || 'LED').trim().replace(/[\\/:*?"<>|\s]+/g, '_').replace(/^_|_$/g, '');
+      return clean || 'LED_KEYCHAIN';
+    }
+
+    /**
+     * 全面重新計算並更新介面、擬真預覽與三層 CAD 圖檔
+     */
+    function updateAll() {
+      // 同步數值顯示與孔壁安全檢查
+      document.getElementById('dotDia').value = state.dotDia;
+      document.getElementById('dotDiaNum').value = state.dotDia.toFixed(1);
+      document.getElementById('dotPitch').value = state.dotPitch;
+      document.getElementById('dotPitchNum').value = state.dotPitch.toFixed(1);
+
+      const bridge = +(state.dotPitch - state.dotDia).toFixed(2);
+      const bridgeEl = document.getElementById('bridgeVal');
+      const safetyBox = document.getElementById('wallSafetyBox');
+
+      // 更新孔壁安全提示（深色側欄樣式）
+      if (bridge < 0.4) {
+        bridgeEl.textContent = `${bridge.toFixed(2)} mm（警告：易過熱融連！）`;
+        bridgeEl.className = 'font-mono font-black text-red-400';
+        safetyBox.className = 'mt-2 px-2.5 py-1.5 rounded-lg border-2 border-red-500 bg-red-950/60 text-[11px] flex items-center justify-between text-red-200 font-bold';
+      } else {
+        bridgeEl.textContent = `${bridge.toFixed(2)} mm（安全）`;
+        bridgeEl.className = 'font-mono font-black text-emerald-400';
+        safetyBox.className = 'mt-2 px-2.5 py-1.5 rounded-lg border border-neutral-700 bg-[#23262E] text-[11px] flex items-center justify-between text-neutral-300';
+      }
+
+      document.getElementById('thresholdVal').textContent = state.threshold;
+      document.getElementById('cornerRadiusVal').textContent = `${state.cornerRadius.toFixed(1)} mm`;
+      document.getElementById('framePadYVal').textContent = `${state.framePadY.toFixed(1)} mm`;
+      document.getElementById('zoomLabel').textContent = `${Math.round(state.zoom * 100)}%`;
+
+      // 更新手動修改計數與重置按鈕狀態
+      const manualCount = state.manualOverrides.size;
+      document.getElementById('manualCountBadge').textContent = manualCount;
+      document.getElementById('btnResetManual').disabled = manualCount === 0;
+
+      // 更新點陣字體按鈕高亮狀態
+      const activeCfg = PIXEL_FONT_CONFIGS[state.fontPreset] || PIXEL_FONT_CONFIGS.en5x7;
+      document.querySelectorAll('.font-btn').forEach(btn => {
+        const fid = btn.getAttribute('data-font-btn');
+        if (fid === state.fontPreset) {
+          btn.className = 'font-btn px-2.5 py-2 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-left text-white transition cursor-pointer';
+          btn.querySelectorAll('div')[1].className = 'text-[10px] text-white/90';
+        } else {
+          btn.className = 'font-btn px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] text-left text-neutral-200 hover:border-[#F97316] transition cursor-pointer';
+          btn.querySelectorAll('div')[1].className = 'text-[10px] text-neutral-400';
+        }
+      });
+      document.getElementById('resBadge').textContent = activeCfg.label;
+      document.getElementById('statFontHeight').textContent = `${activeCfg.height} px`;
+
+      // 計算幾何與點陣
+      currentGeo = computeGeometry();
+
+      // 更新統計列
+      document.getElementById('charCountLabel').textContent = `${currentGeo.charCount} 字元`;
+      document.getElementById('statDim').textContent = `${currentGeo.W.toFixed(1)} × ${currentGeo.H.toFixed(1)} mm`;
+      document.getElementById('statCut').textContent = currentGeo.cutCount;
+      document.getElementById('statEngrave').textContent = currentGeo.engraveCount;
+      document.getElementById('statGrid').textContent = `${currentGeo.totalCols} × ${currentGeo.totalRows}`;
+
+      // 渲染高擬真預覽 Canvas
+      renderRealisticPreview(currentGeo);
+
+      // 渲染三層 2D CAD 平面預覽 SVG
+      document.getElementById('svgPreview1').innerHTML = generateLayerSVG(currentGeo, 1, false);
+      document.getElementById('svgPreview2').innerHTML = generateLayerSVG(currentGeo, 2, false);
+      document.getElementById('svgPreview3').innerHTML = generateLayerSVG(currentGeo, 3, false);
+    }
+
+    /**
+     * 根據滑鼠在 Canvas 上的位置找出最接近的燈珠點陣
+     */
+    function findNearestDotAtEvent(e) {
+      if (!currentGeo || !lastRenderMetrics) return null;
+      const canvas = document.getElementById('previewCanvas');
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      const { ox, oy, scale } = lastRenderMetrics;
+      const hitRadius = Math.max(8, (currentGeo.dotPitch * scale) * 0.52);
+
+      let nearest = null;
+      let minDist = Infinity;
+
+      for (const d of currentGeo.dots) {
+        const cx = ox + d.x * scale;
+        const cy = oy + d.y * scale;
+        const dist = Math.hypot(clickX - cx, clickY - cy);
+        if (dist <= hitRadius && dist < minDist) {
+          minDist = dist;
+          nearest = d;
+        }
+      }
+      return nearest;
+    }
+
+    /**
+     * 綁定所有控制項與畫布互動事件
+     */
+    function initEventListeners() {
+      const inputText = document.getElementById('inputText');
+      inputText.addEventListener('input', (e) => {
+        state.text = e.target.value;
+        state.manualOverrides.clear();
+        updateAll();
+      });
+
+      // 快速範例切換鈕
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = btn.getAttribute('data-preset');
+          const targetFont = btn.getAttribute('data-font');
+          inputText.value = val;
+          state.text = val;
+          if (targetFont && PIXEL_FONT_CONFIGS[targetFont]) {
+            state.fontPreset = targetFont;
+          }
+          state.manualOverrides.clear();
+          updateAll();
+        });
+      });
+
+      // 點陣字體模式切換鈕
+      document.querySelectorAll('.font-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fid = btn.getAttribute('data-font-btn');
+          if (PIXEL_FONT_CONFIGS[fid]) {
+            state.fontPreset = fid;
+            state.manualOverrides.clear();
+            updateAll();
+          }
+        });
+      });
+
+      // 筆畫粗細閾值滑桿
+      document.getElementById('thresholdSlider').addEventListener('input', (e) => {
+        state.threshold = parseInt(e.target.value, 10);
+        updateAll();
+      });
+
+      // 留白、字距與混排垂直對齊
+      document.getElementById('marginY').addEventListener('change', (e) => {
+        state.marginY = parseInt(e.target.value, 10);
+        state.manualOverrides.clear();
+        updateAll();
+      });
+      document.getElementById('marginX').addEventListener('change', (e) => {
+        state.marginX = parseInt(e.target.value, 10);
+        state.manualOverrides.clear();
+        updateAll();
+      });
+      document.getElementById('letterSpacing').addEventListener('change', (e) => {
+        state.letterSpacing = parseInt(e.target.value, 10);
+        state.manualOverrides.clear();
+        updateAll();
+      });
+      document.getElementById('vAlign').addEventListener('change', (e) => {
+        state.vAlign = e.target.value;
+        state.manualOverrides.clear();
+        updateAll();
+      });
+
+      // 一鍵尺寸比例預設
+      document.getElementById('presetCompact').addEventListener('click', () => {
+        state.dotDia = 0.9;
+        state.dotPitch = 1.3;
+        state.framePadY = 1.8;
+        updateAll();
+        showToast('已套用：精巧鑰匙圈比例 (孔徑 0.9 / 孔距 1.3 mm)');
+      });
+      document.getElementById('presetStandard').addEventListener('click', () => {
+        state.dotDia = 1.2;
+        state.dotPitch = 1.8;
+        state.framePadY = 2.4;
+        updateAll();
+        showToast('已套用：標準吊牌比例 (孔徑 1.2 / 孔距 1.8 mm)');
+      });
+
+      // 孔徑與中心距（滑桿與數字輸入框雙向同步）
+      const syncDia = (val) => {
+        const clamped = Math.min(2.0, Math.max(0.7, parseFloat(val) || 1.1));
+        state.dotDia = +clamped.toFixed(1);
+        updateAll();
+      };
+      document.getElementById('dotDia').addEventListener('input', (e) => syncDia(e.target.value));
+      document.getElementById('dotDiaNum').addEventListener('change', (e) => syncDia(e.target.value));
+
+      const syncPitch = (val) => {
+        const clamped = Math.min(2.8, Math.max(1.0, parseFloat(val) || 1.5));
+        state.dotPitch = +clamped.toFixed(1);
+        updateAll();
+      };
+      document.getElementById('dotPitch').addEventListener('input', (e) => syncPitch(e.target.value));
+      document.getElementById('dotPitchNum').addEventListener('change', (e) => syncPitch(e.target.value));
+
+      // 導圓角與上下邊框留白
+      document.getElementById('cornerRadius').addEventListener('input', (e) => {
+        state.cornerRadius = parseFloat(e.target.value);
+        updateAll();
+      });
+      document.getElementById('framePadY').addEventListener('input', (e) => {
+        state.framePadY = parseFloat(e.target.value);
+        updateAll();
+      });
+
+      // 螺絲規格與吊孔
+      document.getElementById('screwDia').addEventListener('change', (e) => {
+        state.screwDia = parseFloat(e.target.value);
+        updateAll();
+      });
+
+      const keyringToggle = document.getElementById('keyringToggle');
+      const keyringDia = document.getElementById('keyringDia');
+      keyringToggle.addEventListener('change', (e) => {
+        state.keyringEnabled = e.target.checked;
+        keyringDia.disabled = !state.keyringEnabled;
+        updateAll();
+      });
+      keyringDia.addEventListener('change', (e) => {
+        state.keyringDia = parseFloat(e.target.value);
+        updateAll();
+      });
+
+      // 螢光底板顏色選擇（深色側欄按鈕樣式）
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.color-btn').forEach(b => {
+            b.classList.remove('border-2', 'border-[#F97316]', 'bg-[#2B2F3A]', 'text-white');
+            b.classList.add('border', 'border-neutral-600', 'bg-[#23262E]', 'text-neutral-200');
+          });
+          btn.classList.remove('border', 'border-neutral-600', 'bg-[#23262E]', 'text-neutral-200');
+          btn.classList.add('border-2', 'border-[#F97316]', 'bg-[#2B2F3A]', 'text-white');
+
+          state.accentColor = btn.getAttribute('data-color');
+          state.accentName = btn.getAttribute('data-name');
+          updateAll();
+        });
+      });
+
+      // 光線視角模式切換（深色側欄按鈕樣式）
+      const modeLit = document.getElementById('modeLit');
+      const modeReflect = document.getElementById('modeReflect');
+
+      modeLit.addEventListener('click', () => {
+        state.previewMode = 'lit';
+        modeLit.className = 'mode-btn px-3 py-2.5 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer';
+        modeReflect.className = 'mode-btn px-3 py-2.5 rounded-lg border border-neutral-600 bg-[#23262E] text-neutral-200 hover:border-[#F97316] text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer';
+        updateAll();
+      });
+
+      modeReflect.addEventListener('click', () => {
+        state.previewMode = 'reflect';
+        modeReflect.className = 'mode-btn px-3 py-2.5 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer';
+        modeLit.className = 'mode-btn px-3 py-2.5 rounded-lg border border-neutral-600 bg-[#23262E] text-neutral-200 hover:border-[#F97316] text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer';
+        updateAll();
+      });
+
+      // 淺雕路徑模式切換（外框線雕圓 vs 同心圓雕刻）
+      document.getElementById('engraveStyle').addEventListener('change', (e) => {
+        state.engraveStyle = e.target.value;
+        updateAll();
+      });
+
+      // 預覽畫布互動：滑鼠移動高亮 + 點擊切換單顆燈珠狀態
+      const previewCanvas = document.getElementById('previewCanvas');
+      previewCanvas.addEventListener('mousemove', (e) => {
+        const hit = findNearestDotAtEvent(e);
+        const newKey = hit ? hit.key : null;
+        if (newKey !== hoverDotKey) {
+          hoverDotKey = newKey;
+          if (currentGeo) renderRealisticPreview(currentGeo);
+        }
+      });
+      previewCanvas.addEventListener('mouseleave', () => {
+        if (hoverDotKey !== null) {
+          hoverDotKey = null;
+          if (currentGeo) renderRealisticPreview(currentGeo);
+        }
+      });
+      previewCanvas.addEventListener('click', (e) => {
+        const hit = findNearestDotAtEvent(e);
+        if (hit) {
+          const nextState = !hit.isLit;
+          state.manualOverrides.set(hit.key, nextState);
+          updateAll();
+        }
+      });
+
+      // 重置手動修改按鈕
+      document.getElementById('btnResetManual').addEventListener('click', () => {
+        state.manualOverrides.clear();
+        updateAll();
+        showToast('已重置所有手動修改的燈珠');
+      });
+
+      // 縮放檢視控制
+      document.getElementById('btnZoomIn').addEventListener('click', () => {
+        state.zoom = Math.min(2.0, +(state.zoom + 0.25).toFixed(2));
+        updateAll();
+      });
+      document.getElementById('btnZoomOut').addEventListener('click', () => {
+        state.zoom = Math.max(0.75, +(state.zoom - 0.25).toFixed(2));
+        updateAll();
+      });
+
+      const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzT6UtLTWgcjASzLtlKbfHqSnCzvML1QzbMWfzZqSlf5qmtj4d4_4sEzenE0sNkImw4/exec';
+
+      function setLedUploadStatus(type, message) {
+        const box = document.getElementById('ledUploadStatus');
+        box.classList.remove('hidden', 'bg-emerald-500/15', 'border-emerald-500/40', 'text-emerald-300', 'bg-red-500/15', 'border-red-500/40', 'text-red-300', 'bg-orange-500/15', 'border-orange-500/40', 'text-orange-300');
+        if (type === 'success') {
+          box.classList.add('bg-emerald-500/15', 'border-emerald-500/40', 'text-emerald-300');
+        } else if (type === 'error') {
+          box.classList.add('bg-red-500/15', 'border-red-500/40', 'text-red-300');
+        } else {
+          box.classList.add('bg-orange-500/15', 'border-orange-500/40', 'text-orange-300');
+        }
+        box.textContent = message;
+      }
+
+      document.getElementById('btnLedUploadCloud').addEventListener('click', async () => {
+        const customerClass = document.getElementById('ledCustomerClass').value.trim();
+        const customerName = document.getElementById('ledCustomerName').value.trim();
+
+        if (!customerClass) {
+          setLedUploadStatus('error', '請先填寫「班級」再送出。');
+          document.getElementById('ledCustomerClass').focus();
+          return;
+        }
+        if (!customerName) {
+          setLedUploadStatus('error', '請先填寫「姓名」再送出。');
+          document.getElementById('ledCustomerName').focus();
+          return;
+        }
+
+        const btn = document.getElementById('btnLedUploadCloud');
+        const btnText = document.getElementById('btnLedUploadText');
+        btn.disabled = true;
+        btnText.textContent = '⏳ 正在產生三層 SVG 並上傳中...';
+        setLedUploadStatus('info', '正在產生 1:1 雷切三層合一 SVG 並傳送至雲端，請勿關閉網頁...');
+
+        try {
+          const geo = computeGeometry();
+          const svgCode = generateLayerSVG(geo, 'all', true);
+          const svgBytes = new TextEncoder().encode(svgCode);
+          let binary = '';
+          const chunkSize = 0x8000;
+          for (let i = 0; i < svgBytes.length; i += chunkSize) {
+            binary += String.fromCharCode.apply(null, svgBytes.subarray(i, i + chunkSize));
+          }
+          const base64 = btoa(binary);
+
+          const now = new Date();
+          const pad = (n) => String(n).padStart(2, '0');
+          const timeTag = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+          const sanitize = (s) => (s || '').replace(/[\\/:*?"<>|]/g, '_');
+          const cleanText = sanitize(state.text.trim()).slice(0, 24) || 'LED';
+          const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_LED鑰匙圈_${cleanText}_${geo.W}x${geo.H}mm.svg`;
+
+          const fontCfg = PIXEL_FONT_CONFIGS[state.fontPreset] || PIXEL_FONT_CONFIGS.en5x7;
+          const res = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              filename,
+              mimeType: 'image/svg+xml',
+              base64,
+              customerClass,
+              customerName,
+              cardLabel: `${state.text} (${fontCfg.label} | ${state.accentName} | ${geo.W}x${geo.H}mm)`,
+              preset: 'led-keychain',
+              timestamp: now.toISOString(),
+            }),
+          });
+
+          if (!res.ok) {
+            throw new Error(`伺服器回應異常（HTTP ${res.status}）`);
+          }
+          const result = await res.json();
+          if (!result.ok) {
+            throw new Error(result.error || '雲端儲存失敗');
+          }
+
+          setLedUploadStatus(
+            'success',
+            `✅ 送出成功！已收到「${customerClass} ${customerName}」的 LED 鑰匙圈設計（檔名：${result.fileName || filename}）。請向工作人員確認或結帳！`
+          );
+          showToast('已成功送出 LED 鑰匙圈訂單至雲端！');
+        } catch (err) {
+          console.error(err);
+          setLedUploadStatus('error', `❌ 上傳失敗：${err.message || '請確認網路連線後重試，或洽詢現場工作人員。'}`);
+        } finally {
+          btn.disabled = false;
+          btnText.textContent = '🚀 確認送出 LED 鑰匙圈至雲端';
+        }
+      });
+
+      // 視窗縮放自適應重繪
+      window.addEventListener('resize', () => {
+        if (currentGeo) renderRealisticPreview(currentGeo);
+      });
+    }
+
+    // 確保網頁字型載入完成後再進行首次中文點陣柵格化，避免初次渲染抓到系統預設字型
+    window.addEventListener('DOMContentLoaded', () => {
+      initEventListeners();
+      updateAll();
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          updateAll();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

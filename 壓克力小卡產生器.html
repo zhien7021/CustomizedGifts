@@ -730,6 +730,7 @@
     <div class="mode-switcher" role="tablist" aria-label="功能切換">
       <button type="button" class="mode-tab active" data-app-tab="card">🎴 客製壓克力小卡</button>
       <button type="button" class="mode-tab" data-app-tab="keychain">🔑 客製文字吊飾</button>
+      <button type="button" class="mode-tab" data-app-tab="led">💡 客製 LED 鑰匙圈</button>
     </div>
     <div class="spec-pill" id="cardSpecPill">
       <span class="spec-dot"></span>
@@ -1007,6 +1008,10 @@
 
   <section class="keychain-frame-wrap" id="keychainWrap">
     <iframe id="keychainFrame" title="客製 3D 文字吊飾"></iframe>
+  </section>
+
+  <section class="keychain-frame-wrap" id="ledWrap">
+    <iframe id="ledFrame" title="客製 LED 鑰匙圈"></iframe>
   </section>
 
   <script>
@@ -1993,23 +1998,38 @@ canvasEl.addEventListener('wheel', (e) => {
 // Cloud upload button
 document.getElementById('btnUploadCloud').addEventListener('click', () => submitCardToCloud());
 
-// App mode switcher (客製壓克力小卡 <-> 客製文字吊飾)
+// App mode switcher (客製壓克力小卡 <-> 客製文字吊飾 <-> 客製 LED 鑰匙圈)
 document.querySelectorAll('.mode-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const target = tab.dataset.appTab;
     document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t === tab));
     const isCard = target === 'card';
+    const isKeychain = target === 'keychain';
+    const isLed = target === 'led';
+
     document.body.classList.toggle('keychain-mode', !isCard);
     document.getElementById('cardMain').style.display = isCard ? '' : 'none';
     document.getElementById('cardSpecPill').style.display = isCard ? '' : 'none';
-    document.getElementById('pageTitle').textContent = isCard ? '客製壓克力小卡' : '客製 3D 文字吊飾';
-    const wrap = document.getElementById('keychainWrap');
-    wrap.classList.toggle('active', !isCard);
-    if (!isCard) {
+
+    const titles = {
+      card: '客製壓克力小卡',
+      keychain: '客製 3D 文字吊飾',
+      led: '客製點陣 LED 鑰匙圈'
+    };
+    document.getElementById('pageTitle').textContent = titles[target] || '客製壓克力小卡';
+
+    const kcWrap = document.getElementById('keychainWrap');
+    kcWrap.classList.toggle('active', isKeychain);
+    if (isKeychain) {
       const frame = document.getElementById('keychainFrame');
-      if (!frame.src) {
-        frame.src = 'keychain.html';
-      }
+      if (!frame.src) frame.src = 'keychain.html';
+    }
+
+    const ledWrap = document.getElementById('ledWrap');
+    ledWrap.classList.toggle('active', isLed);
+    if (isLed) {
+      const frame = document.getElementById('ledFrame');
+      if (!frame.src) frame.src = 'led.html';
     }
   });
 });
