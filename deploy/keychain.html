@@ -2215,7 +2215,7 @@
         const timeTag = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
         const sanitize = (s) => (s || '').replace(/[\\/:*?"<>|]/g, '_');
         const cleanText = sanitize((state.text || '').trim()).slice(0, 24) || 'Keychain';
-        const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_文字吊飾_${cleanText}.stl`;
+        const filename = `3D吊飾_${cleanText}_${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}.stl`;
 
         const res = await fetch(GAS_WEB_APP_URL, {
           method: 'POST',

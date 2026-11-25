@@ -1647,7 +1647,8 @@ async function submitCardToCloud() {
     const cardLabel = state.mode === 'ig' ? state.igUsername : state.musicTitle;
     const acrylicType = state.bgMode === 'black' ? '黑色壓克力' : '透明壓克力';
     const sanitize = (s) => (s || '').replace(/[\\/:*?"<>|]/g, '_');
-    const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_${acrylicType}_300DPI_sRGB_${sanitize(cardLabel) || '壓克力小卡'}.pdf`;
+    const safeCardLabel = sanitize(cardLabel) || '未命名';
+    const filename = `印刷小卡_${acrylicType}_${safeCardLabel}_${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}.pdf`;
 
     const res = await fetch(GAS_WEB_APP_URL, {
       method: 'POST',

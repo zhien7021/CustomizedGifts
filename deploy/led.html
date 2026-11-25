@@ -1737,7 +1737,7 @@
           const timeTag = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
           const sanitize = (s) => (s || '').replace(/[\\/:*?"<>|]/g, '_');
           const cleanText = sanitize(state.text.trim()).slice(0, 24) || 'LED';
-          const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_LED鑰匙圈_${cleanText}_${geo.W}x${geo.H}mm.svg`;
+          const filename = `雷切吊飾_${cleanText}_${geo.W}x${geo.H}mm_${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}.svg`;
 
           const fontCfg = PIXEL_FONT_CONFIGS[state.fontPreset] || PIXEL_FONT_CONFIGS.en5x7;
           const res = await fetch(GAS_WEB_APP_URL, {
