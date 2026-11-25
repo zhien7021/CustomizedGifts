@@ -167,7 +167,31 @@
 
     @media (max-width: 1024px) {
       main {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 14px;
+      }
+      .controls-column,
+      .preview-column {
+        display: contents;
+      }
+      .controls-column > section:first-child {
+        order: 1;
+      }
+      .preview-toolbar {
+        order: 2;
+      }
+      .stage-wrapper {
+        order: 3;
+        align-self: center;
+      }
+      .controls-column > section:nth-child(n+2) {
+        order: 4;
+      }
+      .upload-bar {
+        order: 5;
+        align-self: center;
       }
     }
 
@@ -916,7 +940,8 @@
         <div class="form-group">
           <label>匯出圖片底色模式</label>
           <div class="btn-row" id="bgModeGroup">
-            <button type="button" class="btn-sm active" data-bg="white">純白底 (#FFFFFF)</button>
+            <button type="button" class="btn-sm active" data-bg="transparent">透明底（壓克力直噴推薦）</button>
+            <button type="button" class="btn-sm" data-bg="white">純白底 (#FFFFFF)</button>
             <button type="button" class="btn-sm" data-bg="black">純黑底 (#000000)</button>
             <button type="button" class="btn-sm" data-bg="custom">自訂底色</button>
           </div>
@@ -992,7 +1017,7 @@
 const state = {
   preset: 'music-light', // 'music-light' | 'music-dark' | 'ig-card' | 'music-band'
   mode: 'music',         // 'music' | 'ig'
-  bgMode: 'white', // 'white' | 'black' | 'custom'
+  bgMode: 'transparent', // 'transparent' | 'white' | 'black' | 'custom'
   customBg: '#fff8f0',
 
   // Photo transform
@@ -1512,7 +1537,7 @@ async function deflateBytes(bytes) {
   return { data: new Uint8Array(ab), compressed: true };
 }
 
-async function buildCmykPdfBlob(canvas) {
+async function buildCmykPdfBlob(canvas, withAlpha = false) {
   const width = canvas.width;
   const height = canvas.height;
   // 5.4 cm × 8.5 cm in PDF points (1 inch = 72 pt = 2.54 cm)
@@ -1523,6 +1548,15 @@ async function buildCmykPdfBlob(canvas) {
   const rgba = ctx.getImageData(0, 0, width, height).data;
   const cmykRaw = rgbImageDataToCmykBytes(rgba);
   const { data: imgBytes, compressed } = await deflateBytes(cmykRaw);
+
+  let maskData = null;
+  if (withAlpha) {
+    const alphaRaw = new Uint8Array(width * height);
+    for (let i = 0, p = 0; i < rgba.length; i += 4, p++) {
+      alphaRaw[p] = rgba[i + 3];
+    }
+    maskData = await deflateBytes(alphaRaw);
+  }
 
   const enc = new TextEncoder();
   const chunks = [];
@@ -1550,10 +1584,11 @@ async function buildCmykPdfBlob(canvas) {
   offsets.push(offset);
   pushStr(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${ptW} ${ptH}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\nendobj\n`);
 
-  // 4: DeviceCMYK Image XObject
+  // 4: DeviceCMYK Image XObject (with optional SMask 6 0 R for transparent acrylic)
   offsets.push(offset);
   const filterLine = compressed ? ' /Filter /FlateDecode' : '';
-  pushStr(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceCMYK /BitsPerComponent 8${filterLine} /Length ${imgBytes.length} >>\nstream\n`);
+  const smaskLine = maskData ? ' /SMask 6 0 R' : '';
+  pushStr(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceCMYK /BitsPerComponent 8${filterLine}${smaskLine} /Length ${imgBytes.length} >>\nstream\n`);
   pushBytes(imgBytes);
   pushStr('\nendstream\nendobj\n');
 
@@ -1561,6 +1596,15 @@ async function buildCmykPdfBlob(canvas) {
   const contentStream = `q\n${ptW} 0 0 ${ptH} 0 0 cm\n/Im0 Do\nQ\n`;
   offsets.push(offset);
   pushStr(`5 0 obj\n<< /Length ${contentStream.length} >>\nstream\n${contentStream}endstream\nendobj\n`);
+
+  // 6: Optional Soft Mask (8-bit DeviceGray Alpha)
+  if (maskData) {
+    offsets.push(offset);
+    const maskFilter = maskData.compressed ? ' /Filter /FlateDecode' : '';
+    pushStr(`6 0 obj\n<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceGray /BitsPerComponent 8${maskFilter} /Length ${maskData.data.length} >>\nstream\n`);
+    pushBytes(maskData.data);
+    pushStr('\nendstream\nendobj\n');
+  }
 
   // Cross-reference table
   const xrefOffset = offset;
@@ -1605,10 +1649,10 @@ async function submitCardToCloud() {
     offCanvas.width = 638;
     offCanvas.height = 1004;
     const ctx = offCanvas.getContext('2d');
-    const solidBg = state.bgMode === 'transparent' ? 'white' : state.bgMode;
-    drawCardToContext(ctx, 1, solidBg);
+    const isTransparent = state.bgMode === 'transparent';
+    drawCardToContext(ctx, 1, isTransparent ? null : state.bgMode);
 
-    const pdfBlob = await buildCmykPdfBlob(offCanvas);
+    const pdfBlob = await buildCmykPdfBlob(offCanvas, isTransparent);
     const base64 = await blobToBase64(pdfBlob);
 
     const now = new Date();
@@ -1687,12 +1731,12 @@ function applyPreset(preset) {
     state.musicTitle = 'Hello my Love';
     state.musicArtist = 'Carina';
     activePhotoImg = loadedImages.sampleCouple;
-    setBgModeUI('white');
+    setBgModeUI('transparent');
     setBackdropUI('white');
   } else if (preset === 'ig-card') {
     state.mode = 'ig';
     activePhotoImg = loadedImages.sampleCouple;
-    setBgModeUI('white');
+    setBgModeUI('transparent');
     setBackdropUI('white');
   }
 
