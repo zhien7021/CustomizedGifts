@@ -188,108 +188,29 @@
         </div>
       </section>
 
-      <!-- 區塊 2：雷射切割物理參數 (1:1 mm) -->
+      <!-- 區塊 2：雷射切割尺寸比例 -->
       <section class="bg-[#181A1F] text-white border-2 border-[#111111] rounded-xl p-4 sm:p-5 shadow-[4px_4px_0px_#111111]">
         <div class="flex items-center justify-between mb-3">
           <h2 class="text-sm font-black uppercase tracking-wider flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-[#F97316]"></span>
-            2. 雷射切割物理參數 (mm)
+            2. 雷射切割尺寸比例
           </h2>
           <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-[#262930] text-neutral-300 border border-neutral-700">1:1 MM</span>
         </div>
 
-        <div class="space-y-4">
-          <!-- 一鍵尺寸比例預設 -->
-          <div>
-            <span class="block text-[11px] font-bold text-neutral-400 mb-1.5">一鍵尺寸比例預設：</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button type="button" id="presetCompact"
-                class="px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] hover:border-[#F97316] text-left transition cursor-pointer">
-                <div class="text-xs font-black text-white">精巧鑰匙圈比例</div>
-                <div class="text-[10px] font-mono text-neutral-400">孔徑 0.9 / 孔距 1.3mm</div>
-              </button>
-              <button type="button" id="presetStandard"
-                class="px-2.5 py-2 rounded-lg border border-neutral-600 bg-[#23262E] hover:border-[#F97316] text-left transition cursor-pointer">
-                <div class="text-xs font-black text-white">標準吊牌比例</div>
-                <div class="text-[10px] font-mono text-neutral-400">孔徑 1.2 / 孔距 1.8mm</div>
-              </button>
-            </div>
-          </div>
-
-          <!-- 燈珠圓孔直徑 -->
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label for="dotDia" class="text-xs font-bold text-neutral-200">燈珠圓孔直徑 (Diameter)</label>
-              <div class="flex items-center gap-1">
-                <input id="dotDiaNum" type="number" min="0.7" max="2.0" step="0.1" value="1.1"
-                  class="w-14 px-1.5 py-0.5 text-right font-mono text-xs font-bold border border-neutral-600 rounded bg-[#23262E] text-white" />
-                <span class="font-mono text-xs font-bold text-neutral-400">mm</span>
-              </div>
-            </div>
-            <input id="dotDia" type="range" min="0.7" max="2.0" step="0.1" value="1.1" class="w-full" />
-          </div>
-
-          <!-- 燈珠中心距 Pitch -->
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label for="dotPitch" class="text-xs font-bold text-neutral-200">燈珠中心距 (Pitch)</label>
-              <div class="flex items-center gap-1">
-                <input id="dotPitchNum" type="number" min="1.0" max="2.8" step="0.1" value="1.5"
-                  class="w-14 px-1.5 py-0.5 text-right font-mono text-xs font-bold border border-neutral-600 rounded bg-[#23262E] text-white" />
-                <span class="font-mono text-xs font-bold text-neutral-400">mm</span>
-              </div>
-            </div>
-            <input id="dotPitch" type="range" min="1.0" max="2.8" step="0.1" value="1.5" class="w-full" />
-
-            <!-- 孔壁安全間距即時提示 -->
-            <div id="wallSafetyBox" class="mt-2 px-2.5 py-1.5 rounded-lg border border-neutral-700 bg-[#23262E] text-[11px] flex items-center justify-between text-neutral-300">
-              <span>孔壁最小間距 (Pitch - Dia)：</span>
-              <span id="bridgeVal" class="font-mono font-black text-emerald-400">0.40 mm (安全)</span>
-            </div>
-          </div>
-
-          <!-- 外框導圓角 & 上下邊框厚度 -->
-          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-neutral-700/80">
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label for="cornerRadius" class="text-xs font-bold text-neutral-200">外框導圓角</label>
-                <span id="cornerRadiusVal" class="font-mono text-xs font-bold text-[#F97316]">1.5 mm</span>
-              </div>
-              <input id="cornerRadius" type="range" min="0" max="4.0" step="0.5" value="1.5" class="w-full" />
-            </div>
-
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label for="framePadY" class="text-xs font-bold text-neutral-200">上下邊框留白</label>
-                <span id="framePadYVal" class="font-mono text-xs font-bold text-[#F97316]">2.2 mm</span>
-              </div>
-              <input id="framePadY" type="range" min="1.4" max="4.5" step="0.1" value="2.2" class="w-full" />
-            </div>
-          </div>
-
-          <!-- 左右螺絲鎖孔規格 & 左上吊孔 -->
-          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-neutral-700/80">
-            <div>
-              <label for="screwDia" class="block text-xs font-bold text-neutral-200 mb-1">兩側螺絲鎖孔規格</label>
-              <select id="screwDia" class="w-full px-2 py-2 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316]">
-                <option value="0">無螺絲孔 (純黏合)</option>
-                <option value="2.2" selected>M2 (Ø 2.2 mm)</option>
-                <option value="2.7">M2.5 (Ø 2.7 mm)</option>
-                <option value="3.2">M3 (Ø 3.2 mm)</option>
-              </select>
-            </div>
-
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <label for="keyringToggle" class="text-xs font-bold text-neutral-200">左上角吊孔</label>
-                <input id="keyringToggle" type="checkbox" checked class="w-4 h-4 accent-[#F97316] rounded cursor-pointer" />
-              </div>
-              <select id="keyringDia" class="w-full px-2 py-2 rounded-lg border border-neutral-600 font-mono text-xs font-bold bg-[#23262E] text-white focus:outline-none focus:border-[#F97316] disabled:opacity-40">
-                <option value="2.0">Ø 2.0 mm</option>
-                <option value="2.5" selected>Ø 2.5 mm</option>
-                <option value="3.0">Ø 3.0 mm</option>
-              </select>
-            </div>
+        <div>
+          <span class="block text-[11px] font-bold text-neutral-400 mb-2">選擇切割比例（已鎖定 3mm 螺絲孔與 2.5mm 吊孔）：</span>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="presetCompact"
+              class="px-3 py-2.5 rounded-lg border border-neutral-600 bg-[#23262E] hover:border-[#F97316] text-left transition cursor-pointer">
+              <div class="text-xs font-black text-white">精巧鑰匙圈比例</div>
+              <div class="text-[10px] font-mono text-neutral-400">孔徑 0.9 / 孔距 1.3mm</div>
+            </button>
+            <button type="button" id="presetStandard"
+              class="px-3 py-2.5 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-left transition cursor-pointer">
+              <div class="text-xs font-black text-white">標準吊牌比例</div>
+              <div class="text-[10px] font-mono text-white/90">孔徑 1.2 / 孔距 1.8mm</div>
+            </button>
           </div>
         </div>
       </section>
@@ -598,13 +519,13 @@
       marginX: 2,
       letterSpacing: 1,
       vAlign: 'center',       // 'center' | 'bottom' (中英混排垂直對齊)
-      dotDia: 1.1,
-      dotPitch: 1.5,
+      dotDia: 1.2,
+      dotPitch: 1.8,
       cornerRadius: 1.5,
-      framePadY: 2.2,
-      screwDia: 2.2,          // 0 = 無螺絲孔, 2.2 = M2, 2.7 = M2.5, 3.2 = M3
+      framePadY: 2.4,
+      screwDia: 3.0,          // 鎖定 3 mm 螺絲鎖孔
       keyringEnabled: true,
-      keyringDia: 2.5,
+      keyringDia: 2.5,        // 鎖定 2.5 mm 左上角吊孔
       accentColor: '#FF2A4B',
       accentName: '螢光紅',
       previewMode: 'lit',     // 'lit' | 'reflect'
@@ -1383,30 +1304,7 @@
      * 全面重新計算並更新介面、擬真預覽與三層 CAD 圖檔
      */
     function updateAll() {
-      // 同步數值顯示與孔壁安全檢查
-      document.getElementById('dotDia').value = state.dotDia;
-      document.getElementById('dotDiaNum').value = state.dotDia.toFixed(1);
-      document.getElementById('dotPitch').value = state.dotPitch;
-      document.getElementById('dotPitchNum').value = state.dotPitch.toFixed(1);
-
-      const bridge = +(state.dotPitch - state.dotDia).toFixed(2);
-      const bridgeEl = document.getElementById('bridgeVal');
-      const safetyBox = document.getElementById('wallSafetyBox');
-
-      // 更新孔壁安全提示（深色側欄樣式）
-      if (bridge < 0.4) {
-        bridgeEl.textContent = `${bridge.toFixed(2)} mm（警告：易過熱融連！）`;
-        bridgeEl.className = 'font-mono font-black text-red-400';
-        safetyBox.className = 'mt-2 px-2.5 py-1.5 rounded-lg border-2 border-red-500 bg-red-950/60 text-[11px] flex items-center justify-between text-red-200 font-bold';
-      } else {
-        bridgeEl.textContent = `${bridge.toFixed(2)} mm（安全）`;
-        bridgeEl.className = 'font-mono font-black text-emerald-400';
-        safetyBox.className = 'mt-2 px-2.5 py-1.5 rounded-lg border border-neutral-700 bg-[#23262E] text-[11px] flex items-center justify-between text-neutral-300';
-      }
-
       document.getElementById('thresholdVal').textContent = state.threshold;
-      document.getElementById('cornerRadiusVal').textContent = `${state.cornerRadius.toFixed(1)} mm`;
-      document.getElementById('framePadYVal').textContent = `${state.framePadY.toFixed(1)} mm`;
       document.getElementById('zoomLabel').textContent = `${Math.round(state.zoom * 100)}%`;
 
       // 更新手動修改計數與重置按鈕狀態
@@ -1543,64 +1441,34 @@
       });
 
       // 一鍵尺寸比例預設
-      document.getElementById('presetCompact').addEventListener('click', () => {
+      const btnCompact = document.getElementById('presetCompact');
+      const btnStandard = document.getElementById('presetStandard');
+      const updateRatioButtons = (isCompact) => {
+        btnCompact.className = isCompact
+          ? 'px-3 py-2.5 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-left transition cursor-pointer'
+          : 'px-3 py-2.5 rounded-lg border border-neutral-600 bg-[#23262E] hover:border-[#F97316] text-left transition cursor-pointer';
+        btnCompact.querySelector('div:last-child').className = isCompact ? 'text-[10px] font-mono text-white/90' : 'text-[10px] font-mono text-neutral-400';
+        btnStandard.className = !isCompact
+          ? 'px-3 py-2.5 rounded-lg border-2 border-[#F97316] bg-[#F97316] text-left transition cursor-pointer'
+          : 'px-3 py-2.5 rounded-lg border border-neutral-600 bg-[#23262E] hover:border-[#F97316] text-left transition cursor-pointer';
+        btnStandard.querySelector('div:last-child').className = !isCompact ? 'text-[10px] font-mono text-white/90' : 'text-[10px] font-mono text-neutral-400';
+      };
+
+      btnCompact.addEventListener('click', () => {
         state.dotDia = 0.9;
         state.dotPitch = 1.3;
         state.framePadY = 1.8;
+        updateRatioButtons(true);
         updateAll();
         showToast('已套用：精巧鑰匙圈比例 (孔徑 0.9 / 孔距 1.3 mm)');
       });
-      document.getElementById('presetStandard').addEventListener('click', () => {
+      btnStandard.addEventListener('click', () => {
         state.dotDia = 1.2;
         state.dotPitch = 1.8;
         state.framePadY = 2.4;
+        updateRatioButtons(false);
         updateAll();
         showToast('已套用：標準吊牌比例 (孔徑 1.2 / 孔距 1.8 mm)');
-      });
-
-      // 孔徑與中心距（滑桿與數字輸入框雙向同步）
-      const syncDia = (val) => {
-        const clamped = Math.min(2.0, Math.max(0.7, parseFloat(val) || 1.1));
-        state.dotDia = +clamped.toFixed(1);
-        updateAll();
-      };
-      document.getElementById('dotDia').addEventListener('input', (e) => syncDia(e.target.value));
-      document.getElementById('dotDiaNum').addEventListener('change', (e) => syncDia(e.target.value));
-
-      const syncPitch = (val) => {
-        const clamped = Math.min(2.8, Math.max(1.0, parseFloat(val) || 1.5));
-        state.dotPitch = +clamped.toFixed(1);
-        updateAll();
-      };
-      document.getElementById('dotPitch').addEventListener('input', (e) => syncPitch(e.target.value));
-      document.getElementById('dotPitchNum').addEventListener('change', (e) => syncPitch(e.target.value));
-
-      // 導圓角與上下邊框留白
-      document.getElementById('cornerRadius').addEventListener('input', (e) => {
-        state.cornerRadius = parseFloat(e.target.value);
-        updateAll();
-      });
-      document.getElementById('framePadY').addEventListener('input', (e) => {
-        state.framePadY = parseFloat(e.target.value);
-        updateAll();
-      });
-
-      // 螺絲規格與吊孔
-      document.getElementById('screwDia').addEventListener('change', (e) => {
-        state.screwDia = parseFloat(e.target.value);
-        updateAll();
-      });
-
-      const keyringToggle = document.getElementById('keyringToggle');
-      const keyringDia = document.getElementById('keyringDia');
-      keyringToggle.addEventListener('change', (e) => {
-        state.keyringEnabled = e.target.checked;
-        keyringDia.disabled = !state.keyringEnabled;
-        updateAll();
-      });
-      keyringDia.addEventListener('change', (e) => {
-        state.keyringDia = parseFloat(e.target.value);
-        updateAll();
       });
 
       // 螢光底板顏色選擇（深色側欄按鈕樣式）
