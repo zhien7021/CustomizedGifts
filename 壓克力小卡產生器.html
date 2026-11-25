@@ -983,7 +983,7 @@
       <div class="upload-bar">
         <div class="upload-title">
           <span>📦 填寫資料並送出小卡</span>
-          <span class="badge">300 DPI CMYK PDF · 直接傳送雲端</span>
+          <span class="badge">300 DPI sRGB PDF · 直接傳送雲端</span>
         </div>
         <div class="customer-fields">
           <div class="field">
@@ -997,7 +997,7 @@
         </div>
         <button type="button" class="btn-upload" id="btnUploadCloud">
           <span id="btnUploadText">🚀 確認送出小卡至雲端</span>
-          <span class="sub">送出後將傳送 5.4 × 8.5 cm（300 DPI CMYK PDF）印刷檔給工作人員</span>
+          <span class="sub">送出後將傳送 5.4 × 8.5 cm（300 DPI sRGB PDF）印刷檔給工作人員</span>
         </button>
         <div class="upload-status" id="uploadStatus"></div>
       </div>
@@ -1496,29 +1496,15 @@ function setUploadStatus(type, message) {
   box.textContent = message;
 }
 
-function rgbImageDataToCmykBytes(rgba) {
+function rgbaToRgbBytes(rgba) {
   const pixelCount = rgba.length / 4;
-  const cmyk = new Uint8Array(pixelCount * 4);
-  for (let i = 0, j = 0; i < rgba.length; i += 4, j += 4) {
-    const r = rgba[i] / 255;
-    const g = rgba[i + 1] / 255;
-    const b = rgba[i + 2] / 255;
-    const maxVal = Math.max(r, g, b);
-    const k = 1 - maxVal;
-    if (k >= 0.9999) {
-      cmyk[j] = 0;
-      cmyk[j + 1] = 0;
-      cmyk[j + 2] = 0;
-      cmyk[j + 3] = 255;
-    } else {
-      const invK = 1 - k;
-      cmyk[j] = Math.round(((1 - r - k) / invK) * 255);
-      cmyk[j + 1] = Math.round(((1 - g - k) / invK) * 255);
-      cmyk[j + 2] = Math.round(((1 - b - k) / invK) * 255);
-      cmyk[j + 3] = Math.round(k * 255);
-    }
+  const rgb = new Uint8Array(pixelCount * 3);
+  for (let i = 0, j = 0; i < rgba.length; i += 4, j += 3) {
+    rgb[j] = rgba[i];
+    rgb[j + 1] = rgba[i + 1];
+    rgb[j + 2] = rgba[i + 2];
   }
-  return cmyk;
+  return rgb;
 }
 
 async function deflateBytes(bytes) {
@@ -1533,7 +1519,7 @@ async function deflateBytes(bytes) {
   return { data: new Uint8Array(ab), compressed: true };
 }
 
-async function buildCmykPdfBlob(canvas, withAlpha = false) {
+async function buildRgbPdfBlob(canvas, withAlpha = false) {
   const width = canvas.width;
   const height = canvas.height;
   // 5.4 cm × 8.5 cm in PDF points (1 inch = 72 pt = 2.54 cm)
@@ -1542,8 +1528,8 @@ async function buildCmykPdfBlob(canvas, withAlpha = false) {
 
   const ctx = canvas.getContext('2d');
   const rgba = ctx.getImageData(0, 0, width, height).data;
-  const cmykRaw = rgbImageDataToCmykBytes(rgba);
-  const { data: imgBytes, compressed } = await deflateBytes(cmykRaw);
+  const rgbRaw = rgbaToRgbBytes(rgba);
+  const { data: imgBytes, compressed } = await deflateBytes(rgbRaw);
 
   let maskData = null;
   if (withAlpha) {
@@ -1580,11 +1566,11 @@ async function buildCmykPdfBlob(canvas, withAlpha = false) {
   offsets.push(offset);
   pushStr(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${ptW} ${ptH}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\nendobj\n`);
 
-  // 4: DeviceCMYK Image XObject (with optional SMask 6 0 R for transparent acrylic)
+  // 4: DeviceRGB Image XObject (with optional SMask 6 0 R for transparent acrylic)
   offsets.push(offset);
   const filterLine = compressed ? ' /Filter /FlateDecode' : '';
   const smaskLine = maskData ? ' /SMask 6 0 R' : '';
-  pushStr(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceCMYK /BitsPerComponent 8${filterLine}${smaskLine} /Length ${imgBytes.length} >>\nstream\n`);
+  pushStr(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8${filterLine}${smaskLine} /Length ${imgBytes.length} >>\nstream\n`);
   pushBytes(imgBytes);
   pushStr('\nendstream\nendobj\n');
 
@@ -1637,8 +1623,8 @@ async function submitCardToCloud() {
   const btn = document.getElementById('btnUploadCloud');
   const btnText = document.getElementById('btnUploadText');
   btn.disabled = true;
-  btnText.textContent = '⏳ 正在產生 CMYK PDF 並上傳中...';
-  setUploadStatus('info', '正在產生 300 DPI CMYK PDF 印刷檔並傳送至雲端，請勿關閉網頁...');
+  btnText.textContent = '⏳ 正在產生 sRGB PDF 並上傳中...';
+  setUploadStatus('info', '正在產生 300 DPI sRGB PDF 印刷檔並傳送至雲端，請勿關閉網頁...');
 
   try {
     const offCanvas = document.createElement('canvas');
@@ -1647,7 +1633,7 @@ async function submitCardToCloud() {
     const ctx = offCanvas.getContext('2d');
     drawCardToContext(ctx, 1, null);
 
-    const pdfBlob = await buildCmykPdfBlob(offCanvas, true);
+    const pdfBlob = await buildRgbPdfBlob(offCanvas, true);
     const base64 = await blobToBase64(pdfBlob);
 
     const now = new Date();
@@ -1656,7 +1642,7 @@ async function submitCardToCloud() {
     const cardLabel = state.mode === 'ig' ? state.igUsername : state.musicTitle;
     const acrylicType = state.bgMode === 'black' ? '黑色壓克力' : '透明壓克力';
     const sanitize = (s) => (s || '').replace(/[\\/:*?"<>|]/g, '_');
-    const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_${acrylicType}_300DPI_CMYK_${sanitize(cardLabel) || '壓克力小卡'}.pdf`;
+    const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_${acrylicType}_300DPI_sRGB_${sanitize(cardLabel) || '壓克力小卡'}.pdf`;
 
     const res = await fetch(GAS_WEB_APP_URL, {
       method: 'POST',
