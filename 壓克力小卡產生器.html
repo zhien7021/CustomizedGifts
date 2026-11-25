@@ -938,20 +938,14 @@
       <!-- Step 4: Background & Output Settings -->
       <section class="card">
         <div class="card-title">
-          <div><span class="step">STEP 4</span>小卡底色與印刷背景設定</div>
+          <div><span class="step">STEP 4</span>選擇壓克力板材（匯出皆為透明底）</div>
         </div>
         <div class="form-group">
-          <label>匯出圖片底色模式</label>
+          <label>印製板材與文字配色</label>
           <div class="btn-row" id="bgModeGroup">
-            <button type="button" class="btn-sm active" data-bg="transparent">透明底（壓克力直噴推薦）</button>
-            <button type="button" class="btn-sm" data-bg="white">純白底 (#FFFFFF)</button>
-            <button type="button" class="btn-sm" data-bg="black">純黑底 (#000000)</button>
-            <button type="button" class="btn-sm" data-bg="custom">自訂底色</button>
+            <button type="button" class="btn-sm active" data-bg="transparent">透明壓克力（黑字）</button>
+            <button type="button" class="btn-sm" data-bg="black">黑色壓克力（白字）</button>
           </div>
-        </div>
-        <div class="form-group hidden" id="customBgRow">
-          <label>選擇自訂背景顏色</label>
-          <input type="color" id="customBgColor" value="#fff8f0" style="width:100%; height:38px; border:none; border-radius:8px; cursor:pointer;" />
         </div>
       </section>
 
@@ -1135,20 +1129,19 @@ function drawCardToContext(ctx, scaleFactor = 1, forceSolidBg = null) {
   ctx.scale(scaleFactor, scaleFactor);
   ctx.clearRect(0, 0, W, H);
 
-  // 1. Background
-  const effectiveBg = forceSolidBg || state.bgMode;
-  if (effectiveBg === 'white') {
+  // 1. Background (always transparent unless forceSolidBg is explicitly provided)
+  if (forceSolidBg === 'white') {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, W, H);
-  } else if (effectiveBg === 'black') {
+  } else if (forceSolidBg === 'black') {
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, W, H);
-  } else if (effectiveBg === 'custom') {
+  } else if (forceSolidBg === 'custom') {
     ctx.fillStyle = state.customBg;
     ctx.fillRect(0, 0, W, H);
   }
 
-  const isDarkText = !(effectiveBg === 'black' || state.preset === 'music-dark');
+  const isDarkText = !(state.bgMode === 'black' || state.preset === 'music-dark');
   const mainTextColor = isDarkText ? '#000000' : '#FFFFFF';
 
   // Proportional 1 mm inward inset on all 4 sides (1 mm @ 300 DPI = 300 / 25.4 ≈ 11.811 px)
@@ -1652,18 +1645,18 @@ async function submitCardToCloud() {
     offCanvas.width = 638;
     offCanvas.height = 1004;
     const ctx = offCanvas.getContext('2d');
-    const isTransparent = state.bgMode === 'transparent';
-    drawCardToContext(ctx, 1, isTransparent ? null : state.bgMode);
+    drawCardToContext(ctx, 1, null);
 
-    const pdfBlob = await buildCmykPdfBlob(offCanvas, isTransparent);
+    const pdfBlob = await buildCmykPdfBlob(offCanvas, true);
     const base64 = await blobToBase64(pdfBlob);
 
     const now = new Date();
     const pad = (n) => String(n).padStart(2, '0');
     const timeTag = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
     const cardLabel = state.mode === 'ig' ? state.igUsername : state.musicTitle;
+    const acrylicType = state.bgMode === 'black' ? '黑色壓克力' : '透明壓克力';
     const sanitize = (s) => (s || '').replace(/[\\/:*?"<>|]/g, '_');
-    const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_300DPI_CMYK_${sanitize(cardLabel) || '壓克力小卡'}.pdf`;
+    const filename = `${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}_${acrylicType}_300DPI_CMYK_${sanitize(cardLabel) || '壓克力小卡'}.pdf`;
 
     const res = await fetch(GAS_WEB_APP_URL, {
       method: 'POST',
@@ -1674,7 +1667,7 @@ async function submitCardToCloud() {
         base64,
         customerClass,
         customerName,
-        cardLabel: cardLabel || '',
+        cardLabel: `${cardLabel || ''} (${acrylicType})`,
         preset: state.preset,
         timestamp: now.toISOString(),
       }),
@@ -1708,7 +1701,6 @@ function setBgModeUI(bgMode) {
   document.querySelectorAll('#bgModeGroup .btn-sm').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.bg === bgMode);
   });
-  document.getElementById('customBgRow').classList.toggle('hidden', bgMode !== 'custom');
 }
 
 function setBackdropUI(backdrop) {
@@ -1958,13 +1950,9 @@ document.getElementById('btnResetAvatar').addEventListener('click', () => {
 document.querySelectorAll('#bgModeGroup .btn-sm').forEach(btn => {
   btn.addEventListener('click', () => {
     setBgModeUI(btn.dataset.bg);
+    setBackdropUI(btn.dataset.bg === 'black' ? 'dark' : 'white');
     renderCard();
   });
-});
-
-document.getElementById('customBgColor').addEventListener('input', (e) => {
-  state.customBg = e.target.value;
-  renderCard();
 });
 
 document.querySelectorAll('#previewBackdropGroup .btn-sm').forEach(btn => {
