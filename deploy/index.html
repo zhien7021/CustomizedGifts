@@ -731,6 +731,7 @@
       <button type="button" class="mode-tab active" data-app-tab="card">🎴 客製壓克力小卡</button>
       <button type="button" class="mode-tab" data-app-tab="keychain">🔑 客製文字吊飾</button>
       <button type="button" class="mode-tab" data-app-tab="led">💡 客製點陣鑰匙圈</button>
+      <button type="button" class="mode-tab" data-app-tab="keycap">🔘 客製按鈕小圖</button>
     </div>
     <div class="spec-pill" id="cardSpecPill">
       <span class="spec-dot"></span>
@@ -1012,6 +1013,10 @@
 
   <section class="keychain-frame-wrap" id="ledWrap">
     <iframe id="ledFrame" title="客製點陣鑰匙圈"></iframe>
+  </section>
+
+  <section class="keychain-frame-wrap" id="keycapWrap">
+    <iframe id="keycapFrame" title="客製按鈕小圖"></iframe>
   </section>
 
   <script>
@@ -2007,6 +2012,7 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     const isCard = target === 'card';
     const isKeychain = target === 'keychain';
     const isLed = target === 'led';
+    const isKeycap = target === 'keycap';
 
     document.body.classList.toggle('keychain-mode', !isCard);
     document.getElementById('cardMain').style.display = isCard ? '' : 'none';
@@ -2015,7 +2021,8 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     const titles = {
       card: '客製壓克力小卡',
       keychain: '客製 3D 文字吊飾',
-      led: '客製點陣鑰匙圈'
+      led: '客製點陣鑰匙圈',
+      keycap: '客製按鈕小圖'
     };
     document.getElementById('pageTitle').textContent = titles[target] || '客製壓克力小卡';
 
@@ -2031,6 +2038,13 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     if (isLed) {
       const frame = document.getElementById('ledFrame');
       if (!frame.src) frame.src = 'led.html';
+    }
+
+    const keycapWrap = document.getElementById('keycapWrap');
+    keycapWrap.classList.toggle('active', isKeycap);
+    if (isKeycap) {
+      const frame = document.getElementById('keycapFrame');
+      if (!frame.src) frame.src = 'keycap.html';
     }
   });
 });

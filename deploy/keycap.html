@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FRC10114 客製按鈕小圖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --panel: #141418;
+      --panel-border: #2a2a32;
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --primary: #f97316;
+      --primary-hover: #ea580c;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", sans-serif;
+      background: radial-gradient(circle at top right, #261307 0%, #09090b 60%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="range"] {
+      accent-color: var(--primary);
+      width: 100%;
+      cursor: pointer;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 440px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .controls-column {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .preview-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fafafa;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-title span.step {
+      background: rgba(249, 115, 22, 0.18);
+      color: #fb923c;
+      font-size: 12px;
+      padding: 2px 9px;
+      border-radius: 6px;
+      margin-right: 8px;
+    }
+
+    .upload-zone {
+      border: 2px dashed #3f3f46;
+      background: rgba(13, 13, 16, 0.7);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--primary);
+      background: rgba(249, 115, 22, 0.08);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #fb923c;
+      margin-bottom: 4px;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #d4d4d8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    label span.val {
+      color: #fb923c;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm {
+      background: #0d0d10;
+      border: 1px solid #3f3f46;
+      color: #e4e4e7;
+      padding: 7px 12px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-sm:hover {
+      background: #27272a;
+    }
+
+    .btn-sm.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Keycap Realistic Mockup Stage */
+    .stage-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stage-toolbar {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12.5px;
+      color: #d4d4d8;
+      font-weight: 600;
+    }
+
+    .keycap-stage {
+      width: 100%;
+      min-height: 310px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 50% 45%, #27272a 0%, #111114 75%);
+      border: 1px solid #2a2a32;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Physical 1U Keycap Keychain Shell */
+    .keycap-outer {
+      position: relative;
+      width: 224px;
+      height: 224px;
+      border-radius: 26px;
+      background: linear-gradient(145deg, #f4f4f5, #d4d4d8);
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.65),
+        inset 0 2px 3px rgba(255, 255, 255, 0.85),
+        inset 0 -8px 16px rgba(0, 0, 0, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+
+    .keycap-outer.shell-black {
+      background: linear-gradient(145deg, #27272a, #09090b);
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.75),
+        inset 0 2px 3px rgba(255, 255, 255, 0.12),
+        inset 0 -8px 16px rgba(0, 0, 0, 0.6);
+    }
+
+    .keycap-outer.shell-orange {
+      background: linear-gradient(145deg, #fb923c, #ea580c);
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.65),
+        inset 0 2px 3px rgba(255, 255, 255, 0.35),
+        inset 0 -8px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Keyring loop ear on the right side */
+    .keycap-ear {
+      position: absolute;
+      right: -22px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 26px;
+      height: 44px;
+      border-radius: 0 12px 12px 0;
+      background: inherit;
+      box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 0;
+    }
+
+    .keycap-ear::after {
+      content: '';
+      width: 11px;
+      height: 22px;
+      border-radius: 999px;
+      background: #18181b;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Top printable area (1.4 x 1.4 cm) */
+    .keycap-top {
+      position: relative;
+      z-index: 2;
+      width: 164px;
+      height: 164px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.22),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .keycap-top:active {
+      cursor: grabbing;
+    }
+
+    #keycapCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .drag-tip {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Cloud Upload Bar */
+    .upload-bar {
+      width: 100%;
+      max-width: 520px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .upload-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .upload-header .badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #fdba74;
+      background: rgba(249, 115, 22, 0.16);
+      border: 1px solid rgba(249, 115, 22, 0.35);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .customer-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .customer-fields .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .customer-fields label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #d4d4d8;
+    }
+
+    .customer-fields input {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: 8px;
+      border: 1px solid #3f3f46;
+      background: #0d0d10;
+      color: #fafafa;
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .customer-fields input:focus {
+      border-color: #f97316;
+    }
+
+    .btn-upload {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #fff;
+      border: none;
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.35);
+    }
+
+    .btn-upload:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(249, 115, 22, 0.5);
+    }
+
+    .btn-upload:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .btn-upload .sub {
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.92;
+    }
+
+    .upload-status {
+      font-size: 12.5px;
+      line-height: 1.5;
+      padding: 10px 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .upload-status.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+
+    .upload-status.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .upload-status.info {
+      display: block;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.4);
+      color: #fdba74;
+    }
+
+    @media (max-width: 960px) {
+      main {
+        display: flex;
+        flex-direction: column;
+        padding: 14px;
+        gap: 16px;
+      }
+      .controls-column,
+      .preview-column {
+        display: contents;
+      }
+      .stage-card {
+        order: 1;
+        align-self: center;
+      }
+      .controls-column > section {
+        order: 2;
+      }
+      .upload-bar {
+        order: 3;
+        align-self: center;
+      }
+      .customer-fields {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <!-- Left Controls -->
+    <div class="controls-column">
+
+      <section class="card">
+        <div class="card-title">
+          <div><span class="step">STEP 1</span>上傳按鈕小圖照片</div>
+        </div>
+
+        <div class="upload-zone" id="photoDropZone">
+          <input type="file" id="photoInput" accept="image/*" />
+          <div class="upload-title">📁 點擊上傳手機圖片，或拖曳至此</div>
+          <div class="upload-hint">支援 JPG / PNG / WEBP（檔案限 8 MB 以內）</div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>圖片縮放比例 <span class="val" id="zoomVal">100%</span></label>
+            <input type="range" id="photoZoom" min="30" max="300" value="100" />
+          </div>
+          <div class="form-group">
+            <label>圖片旋轉角度 <span class="val" id="rotVal">0°</span></label>
+            <input type="range" id="photoRotate" min="-180" max="180" value="0" />
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top: 14px;">
+          <button type="button" class="btn-sm" id="btnResetPhoto">一鍵置中填滿</button>
+          <button type="button" class="btn-sm" id="btnFitContain">完整顯示整張</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">
+          <div><span class="step">STEP 2</span>模擬鍵帽外殼與貼紙尺寸</div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>鍵帽外殼顏色（僅供預覽模擬）</label>
+          <div class="btn-row" id="shellColorGroup" style="margin-top: 4px;">
+            <button type="button" class="btn-sm active" data-shell="white">白色鍵帽</button>
+            <button type="button" class="btn-sm" data-shell="black">黑色鍵帽</button>
+            <button type="button" class="btn-sm" data-shell="orange">橘色鍵帽</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>輸出印刷尺寸</label>
+          <div class="btn-row" id="sizeGroup" style="margin-top: 4px;">
+            <button type="button" class="btn-sm active" data-size="1.4">1.4 × 1.4 cm（標準 1U）</button>
+            <button type="button" class="btn-sm" data-size="1.5">1.5 × 1.5 cm（滿版）</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Preview & Cloud Submit -->
+    <div class="preview-column">
+
+      <div class="stage-card">
+        <div class="stage-toolbar">
+          <span>🔘 按鈕鑰匙圈模擬預覽</span>
+          <span style="color:#fb923c; font-size:12px;" id="sizeSpecLabel">輸出：1.4 × 1.4 cm (300 DPI sRGB PDF)</span>
+        </div>
+
+        <div class="keycap-stage">
+          <div class="keycap-outer" id="keycapOuter">
+            <div class="keycap-ear"></div>
+            <div class="keycap-top" id="keycapTop">
+              <canvas id="keycapCanvas" width="300" height="300"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="drag-tip">
+          💡 <strong>操作提示：</strong>可直接在上方鍵帽內「按住拖曳照片位置」或「滾動滾輪縮放大小」
+        </div>
+      </div>
+
+      <div class="upload-bar">
+        <div class="upload-header">
+          <span>📦 填寫資料並送出按鈕小圖</span>
+          <span class="badge">300 DPI sRGB PDF · 直接傳送雲端</span>
+        </div>
+        <div class="customer-fields">
+          <div class="field">
+            <label for="customerClass">班級（必填）</label>
+            <input type="text" id="customerClass" placeholder="例：302 / 資管二甲" maxlength="30" required />
+          </div>
+          <div class="field">
+            <label for="customerName">姓名（必填）</label>
+            <input type="text" id="customerName" placeholder="例：王小明" maxlength="30" required />
+          </div>
+        </div>
+        <button type="button" class="btn-upload" id="btnUploadCloud">
+          <span id="btnUploadText">🚀 確認送出按鈕小圖至雲端</span>
+          <span class="sub">送出後將傳送 300 DPI sRGB PDF 印刷檔給工作人員</span>
+        </button>
+        <div class="upload-status" id="uploadStatus"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzT6UtLTWgcjASzLtlKbfHqSnCzvML1QzbMWfzZqSlf5qmtj4d4_4sEzenE0sNkImw4/exec';
+    const MAX_PHOTO_BYTES = 8 * 1024 * 1024;
+
+    const state = {
+      photoImg: null,
+      photoName: '未上傳',
+      zoom: 100,
+      rotate: 0,
+      offsetX: 0,
+      offsetY: 0,
+      shell: 'white',
+      sizeCm: 1.4
+    };
+
+    const canvas = document.getElementById('keycapCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawKeycapToContext(targetCtx, sizePx) {
+      targetCtx.save();
+      targetCtx.clearRect(0, 0, sizePx, sizePx);
+      targetCtx.fillStyle = '#FFFFFF';
+      targetCtx.fillRect(0, 0, sizePx, sizePx);
+
+      if (state.photoImg) {
+        const imgW = state.photoImg.width;
+        const imgH = state.photoImg.height;
+        const coverScale = Math.max(sizePx / imgW, sizePx / imgH);
+        const totalScale = coverScale * (state.zoom / 100);
+        const cx = sizePx / 2 + (state.offsetX * (sizePx / 300));
+        const cy = sizePx / 2 + (state.offsetY * (sizePx / 300));
+
+        targetCtx.translate(cx, cy);
+        targetCtx.rotate((state.rotate * Math.PI) / 180);
+        targetCtx.scale(totalScale, totalScale);
+        targetCtx.drawImage(state.photoImg, -imgW / 2, -imgH / 2, imgW, imgH);
+      } else {
+        targetCtx.fillStyle = '#f4f4f5';
+        targetCtx.fillRect(0, 0, sizePx, sizePx);
+        targetCtx.fillStyle = '#71717a';
+        targetCtx.font = `700 ${Math.round(sizePx * 0.08)}px "Noto Sans TC", sans-serif`;
+        targetCtx.textAlign = 'center';
+        targetCtx.textBaseline = 'middle';
+        targetCtx.fillText('請上傳照片', sizePx / 2, sizePx / 2 - sizePx * 0.05);
+        targetCtx.font = `500 ${Math.round(sizePx * 0.055)}px "Noto Sans TC", sans-serif`;
+        targetCtx.fillStyle = '#a1a1aa';
+        targetCtx.fillText('可拖曳與縮放', sizePx / 2, sizePx / 2 + sizePx * 0.06);
+      }
+      targetCtx.restore();
+    }
+
+    function renderPreview() {
+      drawKeycapToContext(ctx, 300);
+    }
+
+    function resetPhotoTransform() {
+      state.zoom = 100;
+      state.rotate = 0;
+      state.offsetX = 0;
+      state.offsetY = 0;
+      document.getElementById('photoZoom').value = 100;
+      document.getElementById('zoomVal').textContent = '100%';
+      document.getElementById('photoRotate').value = 0;
+      document.getElementById('rotVal').textContent = '0°';
+    }
+
+    function handlePhotoFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      if (file.size > MAX_PHOTO_BYTES) {
+        alert('圖片檔案過大（超過 8 MB），請先壓縮或更換較小的圖片後再上傳。');
+        return;
+      }
+      state.photoName = file.name.replace(/\.[^.]+$/, '') || '按鈕小圖';
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          state.photoImg = img;
+          resetPhotoTransform();
+          renderPreview();
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // File input & drag-drop
+    document.getElementById('photoInput').addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) handlePhotoFile(e.target.files[0]);
+    });
+
+    const dropZone = document.getElementById('photoDropZone');
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) handlePhotoFile(e.dataTransfer.files[0]);
+    });
+
+    // Transform controls
+    document.getElementById('photoZoom').addEventListener('input', (e) => {
+      state.zoom = Number(e.target.value);
+      document.getElementById('zoomVal').textContent = `${state.zoom}%`;
+      renderPreview();
+    });
+
+    document.getElementById('photoRotate').addEventListener('input', (e) => {
+      state.rotate = Number(e.target.value);
+      document.getElementById('rotVal').textContent = `${state.rotate}°`;
+      renderPreview();
+    });
+
+    document.getElementById('btnResetPhoto').addEventListener('click', () => {
+      resetPhotoTransform();
+      renderPreview();
+    });
+
+    document.getElementById('btnFitContain').addEventListener('click', () => {
+      if (!state.photoImg) return;
+      const coverScale = Math.max(300 / state.photoImg.width, 300 / state.photoImg.height);
+      const containScale = Math.min(300 / state.photoImg.width, 300 / state.photoImg.height);
+      state.zoom = Math.max(30, Math.round((containScale / coverScale) * 100));
+      state.offsetX = 0;
+      state.offsetY = 0;
+      document.getElementById('photoZoom').value = state.zoom;
+      document.getElementById('zoomVal').textContent = `${state.zoom}%`;
+      renderPreview();
+    });
+
+    // Keycap shell & size selectors
+    document.querySelectorAll('#shellColorGroup .btn-sm').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#shellColorGroup .btn-sm').forEach(b => b.classList.toggle('active', b === btn));
+        state.shell = btn.dataset.shell;
+        const outer = document.getElementById('keycapOuter');
+        outer.classList.remove('shell-black', 'shell-orange');
+        if (state.shell === 'black') outer.classList.add('shell-black');
+        if (state.shell === 'orange') outer.classList.add('shell-orange');
+      });
+    });
+
+    document.querySelectorAll('#sizeGroup .btn-sm').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#sizeGroup .btn-sm').forEach(b => b.classList.toggle('active', b === btn));
+        state.sizeCm = Number(btn.dataset.size);
+        document.getElementById('sizeSpecLabel').textContent = `輸出：${state.sizeCm.toFixed(1)} × ${state.sizeCm.toFixed(1)} cm (300 DPI sRGB PDF)`;
+      });
+    });
+
+    // Interactive drag & wheel zoom on keycap top
+    const keycapTop = document.getElementById('keycapTop');
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let startOffX = 0;
+    let startOffY = 0;
+
+    keycapTop.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      startOffX = state.offsetX;
+      startOffY = state.offsetY;
+      keycapTop.setPointerCapture(e.pointerId);
+    });
+
+    keycapTop.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      const rect = keycapTop.getBoundingClientRect();
+      const ratio = 300 / rect.width;
+      state.offsetX = startOffX + (e.clientX - dragStartX) * ratio;
+      state.offsetY = startOffY + (e.clientY - dragStartY) * ratio;
+      renderPreview();
+    });
+
+    keycapTop.addEventListener('pointerup', (e) => {
+      isDragging = false;
+      keycapTop.releasePointerCapture(e.pointerId);
+    });
+
+    keycapTop.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 6 : -6;
+      state.zoom = Math.min(300, Math.max(30, state.zoom + delta));
+      document.getElementById('photoZoom').value = state.zoom;
+      document.getElementById('zoomVal').textContent = `${state.zoom}%`;
+      renderPreview();
+    }, { passive: false });
+
+    // sRGB PDF builder & Cloud Upload
+    function rgbaToRgbBytes(rgba) {
+      const pixelCount = rgba.length / 4;
+      const rgb = new Uint8Array(pixelCount * 3);
+      for (let i = 0, j = 0; i < rgba.length; i += 4, j += 3) {
+        rgb[j] = rgba[i];
+        rgb[j + 1] = rgba[i + 1];
+        rgb[j + 2] = rgba[i + 2];
+      }
+      return rgb;
+    }
+
+    async function deflateBytes(bytes) {
+      if (typeof CompressionStream === 'undefined') {
+        return { data: bytes, compressed: false };
+      }
+      const cs = new CompressionStream('deflate');
+      const writer = cs.writable.getWriter();
+      writer.write(bytes);
+      writer.close();
+      const ab = await new Response(cs.readable).arrayBuffer();
+      return { data: new Uint8Array(ab), compressed: true };
+    }
+
+    async function buildRgbPdfBlob(srcCanvas, sizeCm) {
+      const width = srcCanvas.width;
+      const height = srcCanvas.height;
+      const ptSize = ((sizeCm / 2.54) * 72).toFixed(4);
+
+      const srcCtx = srcCanvas.getContext('2d');
+      const rgba = srcCtx.getImageData(0, 0, width, height).data;
+      const rgbRaw = rgbaToRgbBytes(rgba);
+      const { data: imgBytes, compressed } = await deflateBytes(rgbRaw);
+
+      const enc = new TextEncoder();
+      const chunks = [];
+      let offset = 0;
+      const pushBytes = (u8) => {
+        chunks.push(u8);
+        offset += u8.length;
+      };
+      const pushStr = (str) => pushBytes(enc.encode(str));
+
+      pushBytes(new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xe2, 0xe3, 0xcf, 0xd3, 0x0a]));
+      const offsets = [0];
+
+      offsets.push(offset);
+      pushStr('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+
+      offsets.push(offset);
+      pushStr('2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n');
+
+      offsets.push(offset);
+      pushStr(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${ptSize} ${ptSize}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\nendobj\n`);
+
+      offsets.push(offset);
+      const filterLine = compressed ? ' /Filter /FlateDecode' : '';
+      pushStr(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8${filterLine} /Length ${imgBytes.length} >>\nstream\n`);
+      pushBytes(imgBytes);
+      pushStr('\nendstream\nendobj\n');
+
+      const contentStream = `q\n${ptSize} 0 0 ${ptSize} 0 0 cm\n/Im0 Do\nQ\n`;
+      offsets.push(offset);
+      pushStr(`5 0 obj\n<< /Length ${contentStream.length} >>\nstream\n${contentStream}endstream\nendobj\n`);
+
+      const xrefOffset = offset;
+      pushStr(`xref\n0 ${offsets.length}\n0000000000 65535 f \n`);
+      for (let i = 1; i < offsets.length; i++) {
+        pushStr(`${String(offsets[i]).padStart(10, '0')} 00000 n \n`);
+      }
+      pushStr(`trailer\n<< /Size ${offsets.length} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`);
+
+      return new Blob(chunks, { type: 'application/pdf' });
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = String(reader.result || '');
+          const idx = result.indexOf(',');
+          resolve(idx >= 0 ? result.slice(idx + 1) : result);
+        };
+        reader.onerror = () => reject(new Error('無法讀取檔案'));
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function setUploadStatus(type, message) {
+      const box = document.getElementById('uploadStatus');
+      box.className = `upload-status ${type}`;
+      box.textContent = message;
+    }
+
+    document.getElementById('btnUploadCloud').addEventListener('click', async () => {
+      const customerClass = document.getElementById('customerClass').value.trim();
+      const customerName = document.getElementById('customerName').value.trim();
+
+      if (!state.photoImg) {
+        setUploadStatus('error', '請先在 STEP 1 上傳要印製的圖片再送出。');
+        return;
+      }
+      if (!customerClass) {
+        setUploadStatus('error', '請先填寫「班級」再送出。');
+        document.getElementById('customerClass').focus();
+        return;
+      }
+      if (!customerName) {
+        setUploadStatus('error', '請先填寫「姓名」再送出。');
+        document.getElementById('customerName').focus();
+        return;
+      }
+
+      const btn = document.getElementById('btnUploadCloud');
+      const btnText = document.getElementById('btnUploadText');
+      btn.disabled = true;
+      btnText.textContent = '⏳ 正在產生 PDF 並上傳中...';
+      setUploadStatus('info', '正在產生 300 DPI sRGB PDF 印刷檔並傳送至雲端，請勿關閉網頁...');
+
+      try {
+        // 300 DPI pixel size for sizeCm (1.4cm -> 165px, 1.5cm -> 177px)
+        const pxSize = Math.round((state.sizeCm / 2.54) * 300);
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = pxSize;
+        offCanvas.height = pxSize;
+        const offCtx = offCanvas.getContext('2d');
+        drawKeycapToContext(offCtx, pxSize);
+
+        const pdfBlob = await buildRgbPdfBlob(offCanvas, state.sizeCm);
+        const base64 = await blobToBase64(pdfBlob);
+
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, '0');
+        const timeTag = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+        const sanitize = (s) => (s || '').replace(/[\\/:*?"<>|]/g, '_');
+        const safeLabel = sanitize(state.photoName).slice(0, 24) || '按鈕小圖';
+        const shellLabel = state.shell === 'black' ? '黑殼' : (state.shell === 'orange' ? '橘殼' : '白殼');
+        const filename = `按鈕小圖_${safeLabel}_${state.sizeCm.toFixed(1)}cm_${sanitize(customerClass)}_${sanitize(customerName)}_${timeTag}.pdf`;
+
+        const res = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            filename,
+            mimeType: 'application/pdf',
+            base64,
+            customerClass,
+            customerName,
+            cardLabel: `${state.photoName} (${shellLabel} | ${state.sizeCm.toFixed(1)}x${state.sizeCm.toFixed(1)}cm)`,
+            preset: 'keycap-icon',
+            timestamp: now.toISOString(),
+          }),
+        });
+
+        if (!res.ok) throw new Error(`伺服器回應異常（HTTP ${res.status}）`);
+        const result = await res.json();
+        if (!result.ok) throw new Error(result.error || '雲端儲存失敗');
+
+        setUploadStatus(
+          'success',
+          `✅ 送出成功！已收到「${customerClass} ${customerName}」的按鈕小圖設計（檔名：${result.fileName || filename}）。請向工作人員確認或結帳！`
+        );
+      } catch (err) {
+        console.error(err);
+        setUploadStatus('error', `❌ 上傳失敗：${err.message || '請確認網路連線後重試，或洽詢現場工作人員。'}`);
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = '🚀 確認送出按鈕小圖至雲端';
+      }
+    });
+
+    renderPreview();
+  </script>
+</body>
+</html>
