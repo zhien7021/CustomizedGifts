@@ -506,29 +506,6 @@
         </div>
       </section>
 
-      <section class="card">
-        <div class="card-title">
-          <div><span class="step">STEP 2</span>模擬鍵帽外殼與貼紙尺寸</div>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label>鍵帽外殼顏色（僅供預覽模擬）</label>
-          <div class="btn-row" id="shellColorGroup" style="margin-top: 4px;">
-            <button type="button" class="btn-sm active" data-shell="white">白色鍵帽</button>
-            <button type="button" class="btn-sm" data-shell="black">黑色鍵帽</button>
-            <button type="button" class="btn-sm" data-shell="orange">橘色鍵帽</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>輸出印刷尺寸</label>
-          <div class="btn-row" id="sizeGroup" style="margin-top: 4px;">
-            <button type="button" class="btn-sm active" data-size="1.4">1.4 × 1.4 cm（標準 1U）</button>
-            <button type="button" class="btn-sm" data-size="1.5">1.5 × 1.5 cm（滿版）</button>
-          </div>
-        </div>
-      </section>
-
     </div>
 
     <!-- Right Preview & Cloud Submit -->
@@ -536,8 +513,8 @@
 
       <div class="stage-card">
         <div class="stage-toolbar">
-          <span>🔘 按鈕鑰匙圈模擬預覽</span>
-          <span style="color:#fb923c; font-size:12px;" id="sizeSpecLabel">輸出：1.4 × 1.4 cm (300 DPI sRGB PDF)</span>
+          <span>🔘 按鈕鑰匙圈模擬預覽（白色鍵帽）</span>
+          <span style="color:#fb923c; font-size:12px;" id="sizeSpecLabel">輸出：1.5 × 1.5 cm (300 DPI sRGB PDF)</span>
         </div>
 
         <div class="keycap-stage">
@@ -591,7 +568,7 @@
       offsetX: 0,
       offsetY: 0,
       shell: 'white',
-      sizeCm: 1.4
+      sizeCm: 1.5
     };
 
     const canvas = document.getElementById('keycapCanvas');
@@ -710,26 +687,6 @@
       document.getElementById('photoZoom').value = state.zoom;
       document.getElementById('zoomVal').textContent = `${state.zoom}%`;
       renderPreview();
-    });
-
-    // Keycap shell & size selectors
-    document.querySelectorAll('#shellColorGroup .btn-sm').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#shellColorGroup .btn-sm').forEach(b => b.classList.toggle('active', b === btn));
-        state.shell = btn.dataset.shell;
-        const outer = document.getElementById('keycapOuter');
-        outer.classList.remove('shell-black', 'shell-orange');
-        if (state.shell === 'black') outer.classList.add('shell-black');
-        if (state.shell === 'orange') outer.classList.add('shell-orange');
-      });
-    });
-
-    document.querySelectorAll('#sizeGroup .btn-sm').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#sizeGroup .btn-sm').forEach(b => b.classList.toggle('active', b === btn));
-        state.sizeCm = Number(btn.dataset.size);
-        document.getElementById('sizeSpecLabel').textContent = `輸出：${state.sizeCm.toFixed(1)} × ${state.sizeCm.toFixed(1)} cm (300 DPI sRGB PDF)`;
-      });
     });
 
     // Interactive drag & wheel zoom on keycap top
