@@ -45,14 +45,13 @@
     }
 
     header {
-      padding: 16px 28px;
+      padding: 14px 24px;
       border-bottom: 1px solid var(--panel-border);
       background: rgba(9, 9, 11, 0.88);
       backdrop-filter: blur(12px);
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
       gap: 12px;
       position: sticky;
       top: 0;
@@ -63,6 +62,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      justify-self: start;
     }
 
     .brand-badge {
@@ -83,11 +83,14 @@
 
     .mode-switcher {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 6px;
       background: #0d0d10;
       padding: 4px;
       border-radius: 10px;
       border: 1px solid #2a2a32;
+      justify-self: center;
     }
 
     .mode-tab {
@@ -143,6 +146,8 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      justify-self: end;
+      white-space: nowrap;
     }
 
     .spec-dot {
@@ -684,6 +689,26 @@
       border-radius: 50%;
       object-fit: cover;
       border: 1px solid #3f3f46;
+    }
+
+    @media (max-width: 1180px) {
+      header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px 16px;
+        gap: 10px;
+      }
+      .brand,
+      .mode-switcher,
+      .spec-pill {
+        justify-self: center;
+      }
+      .spec-pill {
+        white-space: normal;
+        text-align: center;
+        font-size: 12px;
+      }
     }
 
     @media (max-width: 1024px) {
